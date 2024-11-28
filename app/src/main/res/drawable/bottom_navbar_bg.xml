@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/primary" />
+    <corners android:radius="50dp" />
+    <path
+        android:fillType="evenOdd"
+        android:pathData="M0,0 h360 v20 q0,40 40,40 h240 q40,0 40,-40 v-20 h360 v360 h-1000 z" />
+</shape>
