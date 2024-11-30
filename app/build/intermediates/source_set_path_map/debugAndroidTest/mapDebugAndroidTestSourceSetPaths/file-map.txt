@@ -1,5 +1,0 @@
-com.example.daunsehat.test.app-core-1.6.1-0 C:\Users\asyifashfr\.gradle\caches\8.9\transforms\36834e7930d7e443f7ef9a73292a5cfd\transformed\core-1.6.1\res
-com.example.daunsehat.test.app-androidTest-1 D:\Bangkit\FE\app\build\generated\res\resValues\androidTest\debug
-com.example.daunsehat.test.app-mergeDebugAndroidTestResources-2 D:\Bangkit\FE\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
-com.example.daunsehat.test.app-mergeDebugAndroidTestResources-3 D:\Bangkit\FE\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
-com.example.daunsehat.test.app-debugAndroidTest-4 D:\Bangkit\FE\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources

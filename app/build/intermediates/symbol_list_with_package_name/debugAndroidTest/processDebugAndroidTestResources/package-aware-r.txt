@@ -1,3 +1,0 @@
-com.example.daunsehat.test
-style WhiteBackgroundDialogTheme
-style WhiteBackgroundTheme
