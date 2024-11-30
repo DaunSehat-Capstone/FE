@@ -1,0 +1,7 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/green" /> <!-- Warna isi -->
+    <stroke
+        android:width="2dp"
+        android:color="@color/green" /> <!-- Outline warna hijau -->
+    <corners android:radius="24dp" /> <!-- Membulatkan sudut -->
+</shape>

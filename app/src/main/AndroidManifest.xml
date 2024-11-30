@@ -1,6 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -12,15 +22,54 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DaunSehat"
         tools:targetApi="31">
+
+        <!-- Main Activity: Entry point of the app -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Profile Activity -->
+        <activity
+            android:name=".features.profile.presentation.ProfileActivity"
+            android:exported="false" />
+
+        <!-- History Activity -->
+        <activity
+            android:name=".features.history.presentation.HistoryActivity"
+            android:exported="false" />
+
+        <!-- Community Activity -->
+        <activity
+            android:name=".features.community.presentation.CommunityActivity"
+            android:exported="false" />
+
+        <!-- Post Activity -->
+        <activity
+            android:name=".features.community.presentation.PostActivity"
+            android:exported="false" />
+
+        <!-- Detection Activity -->
+        <activity
+            android:name=".features.detection.presentation.DetectionActivity"
+            android:exported="false" />
+
+        <activity android:name=".features.detection.presentation.DetectionResultActivity"
+            android:exported="false" />
+
+        <activity android:name=".features.detection.presentation.CameraActivity"
+            android:exported="false" />
+
+
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
     </application>
 
 </manifest>
