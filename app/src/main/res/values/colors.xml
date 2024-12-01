@@ -10,4 +10,7 @@
     <color name="brown">#6C5952</color>
     <color name="light_brown">#DFD6CD</color>
 
+    <color name="primary">#233E2A</color>
+    <color name="secondary">#DFD6CD</color>
+    <color name="tertiary">#6C5952</color>
 </resources>

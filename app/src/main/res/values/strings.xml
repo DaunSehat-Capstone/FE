@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">DaunSehat</string>
+    <string name="app_logo_desc">Logo Aplikasi</string>
+    <string name="btn_login_text">Masuk dengan Google</string>
+    <string name="onboarding_image_desc">Ilustrasi onboarding</string>
+    <string name="txt_onboarding_title">Deteksi Penyakit Tanaman dengan Mudah!</string>
+    <string name="txt_onboarding_desc">Ambil atau unggah foto tanaman Anda, dan kami akan membantu mendeteksi penyakit serta memberikan solusi terbaik untuk perawatan.</string>
+    <string name="reminder_image_desc">Ilustrasi reminder</string>
+    <string name="viewer_image_desc">Ilustrasi viewer</string>
+    <string name="scan_menu_desc">Menu Deteksi</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

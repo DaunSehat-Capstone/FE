@@ -55,6 +55,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <LinearLayout
+        android:id="@+id/btn_edit_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/iv_profile_photo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_edit_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_pen"
+            app:tint="@color/green" />
+
+        <TextView
+            android:id="@+id/tv_edit_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Foto Profil"
+            android:textColor="@color/green"
+            android:textSize="14sp"
+            android:fontFamily="@font/nunito_semi_bold"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
     <View
         android:id="@+id/view_divider_1"
         android:layout_width="0dp"
@@ -63,7 +92,7 @@
         android:layout_marginTop="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_profile_photo" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_edit_photo" />
 
     <LinearLayout
         android:id="@+id/ll_name"

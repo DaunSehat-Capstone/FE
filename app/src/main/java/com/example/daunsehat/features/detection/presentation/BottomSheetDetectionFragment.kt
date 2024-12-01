@@ -10,12 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.Preview
-import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import com.example.daunsehat.R
 import com.example.daunsehat.databinding.BottomSheetImageSourceBinding
 import com.example.daunsehat.utils.rotateFile
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -37,6 +32,10 @@ class BottomSheetDetectionFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        dialog?.setCanceledOnTouchOutside(true)
+
+        isCancelable = true
 
         binding.btnCancel.setOnClickListener {
             dismiss()
@@ -114,11 +113,16 @@ class BottomSheetDetectionFragment : BottomSheetDialogFragment() {
     }
 
     private fun navigateToDetection(croppedUri: Uri) {
-        val intent = Intent(requireContext(), DetectionActivity::class.java).apply {
-            putExtra("CROPPED_IMAGE_URI", croppedUri.toString())
-        }
-        startActivity(intent)
-        dismiss()
+        val fragment = DetectionFragment()
+
+        val bundle = Bundle()
+        bundle.putString("CROPPED_IMAGE_URI", croppedUri.toString())
+        fragment.arguments = bundle
+
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     override fun onDestroyView() {

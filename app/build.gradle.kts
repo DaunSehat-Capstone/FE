@@ -72,4 +72,7 @@ dependencies {
     implementation(libs.camerax.lifecycle)
     implementation(libs.camerax.view)
 
+    implementation(libs.material)
+    implementation(libs.dotsindicator)
+    implementation(libs.glide)
 }
