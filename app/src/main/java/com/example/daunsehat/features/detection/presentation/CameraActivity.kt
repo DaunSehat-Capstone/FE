@@ -13,7 +13,7 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import com.example.daunsehat.MainActivity
+import com.example.daunsehat.features.main.MainActivity
 import com.example.daunsehat.databinding.ActivityCameraBinding
 import com.example.daunsehat.utils.createFile
 

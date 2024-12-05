@@ -10,4 +10,10 @@
     <string name="scan_menu_desc">Menu Deteksi</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="invalid_password_error">Password minimal 8 karakter</string>
+    <string name="invalid_email_error">Email tidak valid</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+
 </resources>

@@ -8,13 +8,19 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 material = "1.12.0"
-activity = "1.8.0"
+activity = "1.9.3"
 constraintlayout = "2.2.0"
-lifecycle = "2.6.1"
+lifecycle = "2.8.7"
 glide = "4.16.0"
 ucrop = "2.2.9"
 room = "2.6.1"
 camerax = "1.4.0"
+okhttp = "4.12.0"
+retrofit = "2.11.0"
+logging-interceptor = "4.12.0"
+gson = "2.10.1"
+androidx-datastore = "1.1.1"
+fragment = "1.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,6 +43,13 @@ androidx-room-testing = { group = "androidx.room", name = "room-testing", versio
 camerax-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax" }
 camerax-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camerax" }
 camerax-view = { module = "androidx.camera:camera-view", version.ref = "camerax" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "logging-interceptor" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-gson-converter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidx-datastore" }
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version = "1.6.1" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

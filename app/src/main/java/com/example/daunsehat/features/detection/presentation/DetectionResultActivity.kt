@@ -5,7 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.example.daunsehat.MainActivity
+import com.example.daunsehat.features.main.MainActivity
 import com.example.daunsehat.databinding.ActivityDetectionResultBinding
 
 class DetectionResultActivity : AppCompatActivity() {
