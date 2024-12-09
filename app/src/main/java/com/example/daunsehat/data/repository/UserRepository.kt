@@ -6,8 +6,10 @@ import com.example.daunsehat.data.pref.UserModel
 import com.example.daunsehat.data.pref.UserPreference
 import com.example.daunsehat.data.remote.response.ErrorResponse
 import com.example.daunsehat.data.remote.response.LoginResponse
+import com.example.daunsehat.data.remote.response.RegisterResponse
 import com.example.daunsehat.data.remote.retrofit.ApiService
 import com.example.daunsehat.data.remote.retrofit.LoginRequest
+import com.example.daunsehat.data.remote.retrofit.RegisterRequest
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import retrofit2.HttpException
@@ -63,5 +65,14 @@ class UserRepository private constructor(
 
     suspend fun logout() {
         userPreference.logout()
+    }
+
+    suspend fun registerUser(email: String, name: String, password: String): ResultApi<RegisterResponse> {
+        return try {
+            val response = apiService.registerUser(RegisterRequest(email, password, name))
+            ResultApi.Success(response)
+        } catch (e: Exception) {
+            ResultApi.Error(e.message ?: "Terjadi kesalahan")
+        }
     }
 }

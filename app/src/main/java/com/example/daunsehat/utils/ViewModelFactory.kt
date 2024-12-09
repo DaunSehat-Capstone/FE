@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.daunsehat.data.repository.UserRepository
 import com.example.daunsehat.di.Injection
 import com.example.daunsehat.features.authentication.login.presentation.viewmodel.LoginViewModel
+import com.example.daunsehat.features.authentication.register.presentation.viewmodel.RegisterViewModel
 import com.example.daunsehat.features.history.data.repository.HistoryRepository
 import com.example.daunsehat.features.main.viewmodel.MainViewModel
 import com.example.daunsehat.features.profile.presentation.viewmodel.ProfileViewModel
@@ -26,6 +27,9 @@ class ViewModelFactory(
                 }
                 modelClass.isAssignableFrom(ProfileViewModel::class.java) -> {
                     ProfileViewModel(repository) as T
+                }
+                modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
+                    RegisterViewModel(repository) as T
                 }
                 else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
             }

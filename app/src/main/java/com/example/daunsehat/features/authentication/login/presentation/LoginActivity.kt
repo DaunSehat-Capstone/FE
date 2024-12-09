@@ -10,11 +10,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.daunsehat.features.main.MainActivity
-import com.example.daunsehat.R
 import com.example.daunsehat.data.pref.UserModel
 import com.example.daunsehat.data.repository.ResultApi
 import com.example.daunsehat.databinding.ActivityLoginBinding
 import com.example.daunsehat.features.authentication.login.presentation.viewmodel.LoginViewModel
+import com.example.daunsehat.features.authentication.register.presentation.RegisterActivity
 import com.example.daunsehat.utils.ViewModelFactory
 
 class LoginActivity : AppCompatActivity() {
@@ -29,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnLoginGoogle.isEnabled = false
+        binding.btnLogin.isEnabled = false
 
         setupAction()
     }
@@ -52,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
         binding.emailEditText.addTextChangedListener(textWatcher)
         binding.passwordEditText.addTextChangedListener(textWatcher)
 
-        binding.btnLoginGoogle.setOnClickListener {
+        binding.btnLogin.setOnClickListener {
             val email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
 
@@ -99,6 +99,11 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+
+        binding.txtRegister.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun navigateToMain() {
@@ -115,7 +120,7 @@ class LoginActivity : AppCompatActivity() {
         val isEmailValid = email.isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
         val isPasswordValid = password.isNotEmpty() && password.length >= 8
 
-        binding.btnLoginGoogle.isEnabled = isEmailValid && isPasswordValid
+        binding.btnLogin.isEnabled = isEmailValid && isPasswordValid
     }
 
     private fun showLoading(isLoading: Boolean) {
