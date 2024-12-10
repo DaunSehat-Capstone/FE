@@ -9,6 +9,7 @@ import com.example.daunsehat.features.authentication.login.presentation.viewmode
 import com.example.daunsehat.features.community.presentation.viewmodel.AddArticleViewModel
 import com.example.daunsehat.features.community.presentation.viewmodel.CommunityViewModel
 import com.example.daunsehat.features.community.presentation.viewmodel.DetailArticleViewModel
+import com.example.daunsehat.features.authentication.register.presentation.viewmodel.RegisterViewModel
 import com.example.daunsehat.features.history.data.repository.HistoryRepository
 import com.example.daunsehat.features.main.viewmodel.MainViewModel
 import com.example.daunsehat.features.profile.presentation.viewmodel.ProfileViewModel
@@ -38,6 +39,9 @@ class ViewModelFactory(
                 }
                 modelClass.isAssignableFrom(DetailArticleViewModel::class.java) -> {
                     DetailArticleViewModel(repository) as T
+                }
+                modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
+                    RegisterViewModel(repository) as T
                 }
                 else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
             }

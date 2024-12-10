@@ -3,13 +3,14 @@ package com.example.daunsehat.data.remote.retrofit
 import com.example.daunsehat.data.remote.response.AddArticleResponse
 import com.example.daunsehat.data.remote.response.DetailArticleResponse
 import com.example.daunsehat.data.remote.response.ListArticleItem
-import com.example.daunsehat.data.remote.response.ListArticleResponse
 import com.example.daunsehat.data.remote.response.LoginResponse
 import com.example.daunsehat.data.remote.response.ProfileResponse
 import com.example.daunsehat.data.remote.response.UserArticleResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
+import com.example.daunsehat.data.remote.response.RegisterResponse
+import com.google.gson.annotations.SerializedName
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -25,6 +26,18 @@ data class LoginRequest(
     val password: String
 )
 
+data class RegisterRequest(
+    @SerializedName("email")
+    val email: String,
+
+    @SerializedName("hashed_password")
+    val password: String,
+
+    @SerializedName("name")
+    val name: String
+)
+
+
 data class EditProfileRequest(
     val name: String,
     val email: String
@@ -36,6 +49,11 @@ interface ApiService {
     suspend fun loginUser(
         @Body request: LoginRequest
     ): LoginResponse
+
+    @POST("user/register")
+    suspend fun registerUser(
+        @Body request: RegisterRequest
+    ): RegisterResponse
 
     @GET("user/profile")
     suspend fun getProfile(
