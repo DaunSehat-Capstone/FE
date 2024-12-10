@@ -73,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
                         }?.let { it2 -> viewModel.saveSession(it2) }
                         val dialog = AlertDialog.Builder(this)
                             .setTitle("Yeah!")
-                            .setMessage("Anda berhasil login. Sudah tidak sabar untuk belajar ya?")
+                            .setMessage("Anda berhasil login.")
                             .setPositiveButton("Lanjut") { _, _ ->
                                 navigateToMain()
                             }

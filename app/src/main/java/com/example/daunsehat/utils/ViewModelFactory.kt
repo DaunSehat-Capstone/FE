@@ -6,6 +6,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.daunsehat.data.repository.UserRepository
 import com.example.daunsehat.di.Injection
 import com.example.daunsehat.features.authentication.login.presentation.viewmodel.LoginViewModel
+import com.example.daunsehat.features.community.presentation.viewmodel.AddArticleViewModel
+import com.example.daunsehat.features.community.presentation.viewmodel.CommunityViewModel
+import com.example.daunsehat.features.community.presentation.viewmodel.DetailArticleViewModel
+import com.example.daunsehat.features.community.presentation.viewmodel.SharedViewModel
 import com.example.daunsehat.features.history.data.repository.HistoryRepository
 import com.example.daunsehat.features.main.viewmodel.MainViewModel
 import com.example.daunsehat.features.profile.presentation.viewmodel.ProfileViewModel
@@ -26,6 +30,15 @@ class ViewModelFactory(
                 }
                 modelClass.isAssignableFrom(ProfileViewModel::class.java) -> {
                     ProfileViewModel(repository) as T
+                }
+                modelClass.isAssignableFrom(CommunityViewModel::class.java) -> {
+                    CommunityViewModel(repository) as T
+                }
+                modelClass.isAssignableFrom(AddArticleViewModel::class.java) -> {
+                    AddArticleViewModel(repository) as T
+                }
+                modelClass.isAssignableFrom(DetailArticleViewModel::class.java) -> {
+                    DetailArticleViewModel(repository) as T
                 }
                 else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
             }

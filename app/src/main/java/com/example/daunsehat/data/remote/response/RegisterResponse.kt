@@ -2,26 +2,16 @@ package com.example.daunsehat.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
-data class LoginResponse(
+data class RegisterResponse(
 
 	@field:SerializedName("message")
 	val message: String? = null,
 
 	@field:SerializedName("user")
-	val user: UserLogin? = null,
-
-	@field:SerializedName("token")
-	val token: String? = null
-
+	val user: UserRegister? = null
 )
 
-data class UserLogin(
-
-	@field:SerializedName("user_id")
-	val userId: Int? = null,
-
-	@field:SerializedName("image_url")
-	val imageUrl: String? = null,
+data class UserRegister(
 
 	@field:SerializedName("name")
 	val name: String? = null,

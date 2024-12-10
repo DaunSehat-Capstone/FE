@@ -39,6 +39,7 @@
             android:exported="false" />
         <activity
             android:name=".features.main.MainActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,7 +49,7 @@
 
         <!-- Post Activity -->
         <activity
-            android:name=".features.community.presentation.PostActivity"
+            android:name=".features.community.presentation.AddArticleActivity"
             android:exported="false" />
 
         <activity android:name=".features.detection.presentation.DetectionResultActivity"
@@ -61,7 +62,6 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
     </application>
 
 </manifest>

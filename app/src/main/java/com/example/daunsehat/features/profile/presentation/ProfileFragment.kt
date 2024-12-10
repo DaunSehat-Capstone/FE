@@ -2,25 +2,50 @@ package com.example.daunsehat.features.profile.presentation
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.PopupWindow
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.daunsehat.R
+import com.example.daunsehat.data.repository.ResultApi
 import com.example.daunsehat.databinding.FragmentProfileBinding
 import com.example.daunsehat.features.authentication.login.presentation.LoginActivity
+import com.example.daunsehat.features.community.presentation.AddArticleActivity
+import com.example.daunsehat.features.profile.presentation.adapter.ListUserArticleAdapter
 import com.example.daunsehat.features.profile.presentation.viewmodel.ProfileViewModel
+import com.example.daunsehat.utils.ImageLoader
+import com.example.daunsehat.utils.NetworkUtils
 import com.example.daunsehat.utils.ViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(), ListUserArticleAdapter.OnDeleteArticleListener {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: ProfileViewModel by viewModels {
         ViewModelFactory.getInstance(requireContext())
     }
+
+    private val adapter by lazy {
+        ListUserArticleAdapter(this)
+    }
+
+    private val addArticleLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, ProfileFragment())
+                    .commit()
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,14 +58,135 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observeSession()
+
         binding.ivMenu.setOnClickListener {
             showLogoutMenu(it)
         }
 
         binding.btnEditProfile.setOnClickListener {
-            val bottomsheet = BottomSheetEditProfileFragment()
-            bottomsheet.show(childFragmentManager, "EditProfileFragment")
+
+            val popupMenu = PopupMenu(requireContext(), it)
+            popupMenu.menuInflater.inflate(R.menu.profile_edit_menu, popupMenu.menu)
+
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.menu_edit_profile -> {
+                        val bottomsheet = BottomSheetEditProfileFragment()
+                        bottomsheet.show(childFragmentManager, "EditProfileFragment")
+                        true
+                    }
+                    R.id.menu_edit_photo -> {
+                        val bottomsheet = BottomSheetEditPhotoProfileFragment()
+                        bottomsheet.show(childFragmentManager, "EditPhotoProfileFragment")
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+            popupMenu.show()
         }
+    }
+
+    private fun observeSession() {
+        viewModel.getSession().observe(viewLifecycleOwner) { user ->
+            if (!user.isLogin) {
+                startActivity(Intent(requireContext(), LoginActivity::class.java))
+                requireActivity().finish()
+            } else {
+                if (NetworkUtils.isInternetAvailable(requireContext())) {
+                    binding.rvUserArticles.layoutManager = LinearLayoutManager(requireContext())
+                    binding.rvUserArticles.adapter = adapter
+
+                    setupView()
+                    setupAction()
+                } else {
+                    Snackbar.make(binding.root, "No Internet Connection", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+    }
+
+    private fun setupAction() {
+        binding.fabCreatePost.setOnClickListener {
+            val intent = Intent(requireContext(), AddArticleActivity::class.java)
+            addArticleLauncher.launch(intent)
+        }
+    }
+
+    private fun setupViewProfile() {
+        viewModel.getProfile().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is ResultApi.Loading -> showLoading(true)
+                is ResultApi.Success -> {
+                    showLoading(false)
+                    val profile = result.data.user
+                    profile?.let {
+                        Log.d("ProfileFragment", "Image URLxxx: ${it.imageUrl}")
+                        binding.tvUsername.text = it.name
+                        binding.tvEmail.text = it.email
+
+                        it.imageUrl?.let { imageUrl ->
+                            ImageLoader.downloadImage(requireContext(), imageUrl) { bitmap ->
+                                if (isAdded && view != null) {
+                                    bitmap?.let { downloadedBitmap ->
+                                        binding.ivPhotoProfile.setImageBitmap(downloadedBitmap)
+                                    } ?: run {
+                                        binding.ivPhotoProfile.setImageResource(R.drawable.ic_photo_profile)
+                                    }
+                                } else {
+                                    Log.d("ProfileFragment", "Fragment is not active; skipping update")
+                                }
+                            }
+                        }
+                        Log.d("EditProfilexxx", "Profile dataxxx: ${result.data}")
+                        Log.d("EditPhotoProfilexxx", "PhotoProfile dataxxx: ${result.data}")
+
+                    }
+                }
+
+                is ResultApi.Error -> {
+                    showLoading(false)
+                    Snackbar.make(binding.root, "Error: ${result.error}", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun setupViewUserArticle() {
+        viewModel.getUserArticle.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is ResultApi.Loading -> showLoading(true)
+                is ResultApi.Success -> {
+                    showLoading(false)
+                    Log.d("ProfileFragmentxxx", "UserArticle: ${result.data}")
+                    if (result.data.isEmpty()) {
+                        showNoDataMessage(true)
+                    } else {
+                        showNoDataMessage(false)
+                        adapter.setList(result.data)
+                    }
+                }
+
+                is ResultApi.Error -> {
+                    showLoading(false)
+                    Snackbar.make(binding.root, "Error: ${result.error}", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+
+    private fun setupView() {
+        setupViewProfile()
+        setupViewUserArticle()
+    }
+
+    private fun showNoDataMessage(show: Boolean) {
+        binding.tvNoData.visibility = if (show) View.VISIBLE else View.GONE
+        binding.rvUserArticles.visibility = if (show) View.GONE else View.VISIBLE
     }
 
     private fun showLogoutMenu(anchor: View) {
@@ -65,8 +211,31 @@ class ProfileFragment : Fragment() {
         requireActivity().finish()
     }
 
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDeleteArticle(articleId: String) {
+        Log.d("ProfileFragment", "Deleting Article ID: $articleId")
+        viewModel.deleteUserArticle(articleId).observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is ResultApi.Loading -> showLoading(true)
+                is ResultApi.Success -> {
+                    Toast.makeText(requireContext(), result.data.message, Toast.LENGTH_SHORT).show()
+                    Log.d("ProfileFragment", "Delete Success: ${result.data.message}")
+                    adapter.removeArticleById(articleId)
+                    showLoading(false)
+                }
+                is ResultApi.Error -> {
+                    showLoading(false)
+                    Toast.makeText(requireContext(), "Error: ${result.error}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 }

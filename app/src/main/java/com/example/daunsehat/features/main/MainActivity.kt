@@ -50,8 +50,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+
+            binding.bottomAppBar.translationY = if (imeVisible) -imeHeight.toFloat() else 0f
             insets
         }
 
@@ -59,11 +61,17 @@ class MainActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener {
             val bottomSheetFragment = BottomSheetDetectionFragment()
-            if (supportFragmentManager.findFragmentByTag(BottomSheetDetectionFragment::class.java.simpleName) == null) {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.bottom_sheet_container, bottomSheetFragment, BottomSheetDetectionFragment::class.java.simpleName)
-                    .commit()
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+
+            val existingFragment =
+                supportFragmentManager.findFragmentByTag(BottomSheetDetectionFragment::class.java.simpleName)
+
+            if (existingFragment != null) {
+                fragmentTransaction.show(existingFragment)
+            } else {
+                fragmentTransaction.add(R.id.bottom_sheet_container, bottomSheetFragment, BottomSheetDetectionFragment::class.java.simpleName)
             }
+            fragmentTransaction.commit()
         }
 
         if (savedInstanceState == null) {
@@ -73,26 +81,35 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupBottomNavigation() {
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
-        bottomNavigationView.setOnItemSelectedListener  { item ->
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
             when (item.itemId) {
                 R.id.menu_home -> {
-                    showFragment(HomePageFragment())
+                    if (currentFragment !is HomePageFragment) {
+                        showFragment(HomePageFragment())
+                    }
                     true
                 }
                 R.id.menu_history -> {
-                    showFragment(HistoryFragment())
+                    if (currentFragment !is HistoryFragment) {
+                        showFragment(HistoryFragment())
+                    }
                     true
                 }
                 R.id.menu_detection -> {
                     true
                 }
                 R.id.menu_community -> {
-                    showFragment(CommunityFragment())
+                    if (currentFragment !is CommunityFragment) {
+                        showFragment(CommunityFragment())
+                    }
                     Log.d("MainActivity", "Show community fragment")
                     true
                 }
                 R.id.menu_profile -> {
-                    showFragment(ProfileFragment())
+                    if (currentFragment !is ProfileFragment) {
+                        showFragment(ProfileFragment())
+                    }
                     true
                 }
                 else -> false
@@ -102,10 +119,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-
-
         fragmentTransaction.replace(R.id.fragment_container, fragment)
-        fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }
 

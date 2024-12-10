@@ -2,20 +2,20 @@ package com.example.daunsehat.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
-data class LoginResponse(
+data class ProfileResponse(
 
 	@field:SerializedName("message")
 	val message: String? = null,
 
 	@field:SerializedName("user")
-	val user: UserLogin? = null,
+	val user: UserProfile? = null,
 
 	@field:SerializedName("token")
 	val token: String? = null
 
 )
 
-data class UserLogin(
+data class UserProfile(
 
 	@field:SerializedName("user_id")
 	val userId: Int? = null,
@@ -28,4 +28,5 @@ data class UserLogin(
 
 	@field:SerializedName("email")
 	val email: String? = null
+
 )

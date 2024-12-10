@@ -8,6 +8,10 @@
 
     <style name="Theme.DaunSehat" parent="Base.Theme.DaunSehat" />
 
+    <style name="CircleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
     <style name="fab_rounded">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
