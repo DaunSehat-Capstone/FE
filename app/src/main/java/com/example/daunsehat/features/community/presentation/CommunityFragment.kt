@@ -19,7 +19,6 @@ import com.example.daunsehat.databinding.FragmentCommunityBinding
 import com.example.daunsehat.features.authentication.login.presentation.LoginActivity
 import com.example.daunsehat.features.community.presentation.adapter.ListArticleAdapter
 import com.example.daunsehat.features.community.presentation.viewmodel.CommunityViewModel
-import com.example.daunsehat.features.community.presentation.viewmodel.SharedViewModel
 import com.example.daunsehat.utils.NetworkUtils
 import com.example.daunsehat.utils.ViewModelFactory
 import com.google.android.material.snackbar.Snackbar

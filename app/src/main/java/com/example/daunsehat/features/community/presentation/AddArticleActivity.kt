@@ -18,7 +18,6 @@ import com.example.daunsehat.R
 import com.example.daunsehat.data.repository.ResultApi
 import com.example.daunsehat.databinding.ActivityPostBinding
 import com.example.daunsehat.features.community.presentation.viewmodel.AddArticleViewModel
-import com.example.daunsehat.features.community.presentation.viewmodel.SharedViewModel
 import com.example.daunsehat.utils.ViewModelFactory
 import com.example.daunsehat.utils.getImageUri
 import com.example.daunsehat.utils.reduceFileImage

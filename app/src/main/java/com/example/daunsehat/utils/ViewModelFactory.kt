@@ -9,7 +9,6 @@ import com.example.daunsehat.features.authentication.login.presentation.viewmode
 import com.example.daunsehat.features.community.presentation.viewmodel.AddArticleViewModel
 import com.example.daunsehat.features.community.presentation.viewmodel.CommunityViewModel
 import com.example.daunsehat.features.community.presentation.viewmodel.DetailArticleViewModel
-import com.example.daunsehat.features.community.presentation.viewmodel.SharedViewModel
 import com.example.daunsehat.features.history.data.repository.HistoryRepository
 import com.example.daunsehat.features.main.viewmodel.MainViewModel
 import com.example.daunsehat.features.profile.presentation.viewmodel.ProfileViewModel
