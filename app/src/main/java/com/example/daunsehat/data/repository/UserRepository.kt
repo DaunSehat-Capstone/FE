@@ -8,6 +8,7 @@ import com.example.daunsehat.data.pref.UserPreference
 import com.example.daunsehat.data.remote.response.AddArticleResponse
 import com.example.daunsehat.data.remote.response.DetailArticleResponse
 import com.example.daunsehat.data.remote.response.ErrorResponse
+import com.example.daunsehat.data.remote.response.HistoryPredictResponseItem
 import com.example.daunsehat.data.remote.response.ListArticleItem
 import com.example.daunsehat.data.remote.response.LoginResponse
 import com.example.daunsehat.data.remote.response.ProfileResponse
@@ -282,6 +283,26 @@ class UserRepository private constructor(
                 )
                 emit(ResultApi.Success(successResponse))
             }
+        } catch (e: HttpException) {
+            val errorMessage = e.response()?.errorBody()?.string()?.let { errorBody ->
+                Gson().fromJson(errorBody, ErrorResponse::class.java).error
+            } ?: e.message()
+            emit(ResultApi.Error(errorMessage))
+        } catch (e: IOException) {
+            emit(ResultApi.Error("No internet connection. Please check your network."))
+        } catch (e: Exception){
+            emit(ResultApi.Error("An unexpected error occurred: ${e.message}"))
+        } catch (e: SocketTimeoutException) {
+            emit(ResultApi.Error("Timeout: Server took too long to respond"))
+        }
+    }
+
+    fun getHistoryPredict(): LiveData<ResultApi<List<HistoryPredictResponseItem>>> = liveData {
+        emit(ResultApi.Loading)
+        try {
+            val token = userPreference.getSession().first().token
+            val response = apiService.getHistoryPredict("Bearer $token")
+            emit(ResultApi.Success(response))
         } catch (e: HttpException) {
             val errorMessage = e.response()?.errorBody()?.string()?.let { errorBody ->
                 Gson().fromJson(errorBody, ErrorResponse::class.java).error

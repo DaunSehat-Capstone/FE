@@ -2,8 +2,11 @@ package com.example.daunsehat.data.remote.retrofit
 
 import com.example.daunsehat.data.remote.response.AddArticleResponse
 import com.example.daunsehat.data.remote.response.DetailArticleResponse
+import com.example.daunsehat.data.remote.response.HistoryPredictResponse
+import com.example.daunsehat.data.remote.response.HistoryPredictResponseItem
 import com.example.daunsehat.data.remote.response.ListArticleItem
 import com.example.daunsehat.data.remote.response.LoginResponse
+import com.example.daunsehat.data.remote.response.PredictResponse
 import com.example.daunsehat.data.remote.response.ProfileResponse
 import com.example.daunsehat.data.remote.response.UserArticleResponse
 import okhttp3.MultipartBody
@@ -109,5 +112,16 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("id") articleId: String
     ): Response<UserArticleResponse>
+
+    @POST("/predict")
+    suspend fun predictPlant(
+        @Header("Authorization") token: String,
+        @Part file: MultipartBody.Part,
+    ): PredictResponse
+
+    @GET("/predict")
+    suspend fun getHistoryPredict(
+        @Header("Authorization") token: String
+    ): List<HistoryPredictResponseItem>
 
 }
