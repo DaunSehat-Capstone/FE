@@ -10,6 +10,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -56,15 +59,15 @@
             android:name=".features.community.presentation.AddArticleActivity"
             android:exported="false" />
         <activity
-            android:name=".features.detection.presentation.PredictResultFragment"
-            android:exported="false" />
-        <activity
             android:name=".features.detection.presentation.CameraActivity"
             android:exported="false" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <receiver android:name=".features.reminder.presentation.ReminderReceiver"
+            android:exported="true"/>
     </application>
 
 </manifest>

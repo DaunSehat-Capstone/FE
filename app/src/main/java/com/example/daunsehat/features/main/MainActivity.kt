@@ -1,5 +1,7 @@
 package com.example.daunsehat.features.main
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +20,7 @@ import com.example.daunsehat.features.history.presentation.HistoryFragment
 import com.example.daunsehat.features.homepage.presentation.HomePageFragment
 import com.example.daunsehat.features.main.viewmodel.MainViewModel
 import com.example.daunsehat.features.profile.presentation.ProfileFragment
+import com.example.daunsehat.onboarding.OnboardingActivity
 import com.example.daunsehat.utils.NetworkUtils
 import com.example.daunsehat.utils.ViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -31,6 +34,20 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        createNotificationChannel()
+
+        // Onboarding
+        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val isOnboardingCompleted = sharedPreferences.getBoolean("onboarding_completed", false)
+
+        Log.d("MainActivity", "Is onboarding completed? $isOnboardingCompleted")
+
+        if (!isOnboardingCompleted) {
+            startActivity(Intent(this, OnboardingActivity::class.java))
+            finish()
+            return
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -140,6 +157,18 @@ class MainActivity : AppCompatActivity() {
                 fragmentManager.popBackStack()
             }
         }
+    }
+
+    private fun createNotificationChannel() {
+        val channel = NotificationChannel(
+            "reminder_channel",
+            "Reminder Menyiram Tanaman",
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        channel.description = "Channel untuk reminder menyiram tanaman"
+
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        notificationManager.createNotificationChannel(channel)
     }
 
     companion object {

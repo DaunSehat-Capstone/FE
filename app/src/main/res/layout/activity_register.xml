@@ -104,7 +104,6 @@
                     android:inputType="textPersonName"
                     android:textColor="@color/black"
                     android:autofillHints="name"
-                    android:hint="@string/name"
                     android:background="@drawable/rounded_stroke_4"/>
             </com.google.android.material.textfield.TextInputLayout>
 

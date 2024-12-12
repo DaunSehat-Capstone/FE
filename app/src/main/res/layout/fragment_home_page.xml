@@ -25,7 +25,7 @@
         android:id="@+id/img_logo"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/dummy_logo"
+        android:src="@drawable/app_logo"
         android:contentDescription="@string/app_logo_desc"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +60,7 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:contentDescription="@string/reminder_image_desc"
-                android:src="@drawable/img_plant"
+                android:src="@drawable/img_reminder"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -95,183 +95,27 @@
                         android:layout_height="0dp"
                         android:layout_weight="1" />
 
-                    <Switch
+                    <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switch_reminder"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        app:thumbTint="@color/secondary"
                         android:minWidth="48dp"
                         android:minHeight="48dp"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" />
+                        app:layout_constraintEnd_toEndOf="parent"/>
 
                 </LinearLayout>
 
                 <GridLayout
-                    android:id="@+id/grid_days"
+                    android:id="@+id/calendarGrid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:columnCount="7"
-                    android:rowCount="2"
-                    android:layout_marginTop="8dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:text="S"
-                        style="@style/TextBodyMedium"
-                        android:textStyle="bold"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:text="S"
-                        style="@style/TextBodyMedium"
-                        android:textStyle="bold"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:text="R"
-                        style="@style/TextBodyMedium"
-                        android:textStyle="bold"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:text="K"
-                        style="@style/TextBodyMedium"
-                        android:textStyle="bold"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:text="J"
-                        style="@style/TextBodyMedium"
-                        android:textStyle="bold"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:text="S"
-                        style="@style/TextBodyMedium"
-                        android:textStyle="bold"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:text="M"
-                        style="@style/TextBodyMedium"
-                        android:textStyle="bold"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:id="@+id/date_1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:text="18"
-                        style="@style/TextBodySmall"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/white"
-                        android:background="@color/primary"
-                        android:padding="4dp" />
-
-                    <TextView
-                        android:id="@+id/date_2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:text="19"
-                        style="@style/TextBodySmall"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:id="@+id/date_3"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:text="20"
-                        style="@style/TextBodySmall"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:id="@+id/date_4"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:text="21"
-                        style="@style/TextBodySmall"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:id="@+id/date_5"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:text="22"
-                        style="@style/TextBodySmall"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:id="@+id/date_6"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:text="23"
-                        style="@style/TextBodySmall"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:id="@+id/date_7"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:text="24"
-                        style="@style/TextBodySmall"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/white" />
-
-
-                </GridLayout>
+                    android:rowCount="6"
+                    android:orientation="horizontal"
+                    android:padding="8dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -284,7 +128,7 @@
                         android:id="@+id/txt_next_alarm"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Alarm selanjutnya:"
+                        android:text="Pengingat pada"
                         style="@style/TextBodySmall"
                         android:textStyle="bold"
                         android:textAppearance="?attr/textAppearanceBody2"
@@ -323,7 +167,7 @@
         app:layout_constraintTop_toBottomOf="@id/card_reminder"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="36dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp">
 
@@ -333,15 +177,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:layout_marginEnd="16dp"
             style="@style/TextHeadlineSmall"
-            android:text="Deteksi Penyakit Tanaman dengan Mudah!"
-            android:textAppearance="?attr/textAppearanceBody1"
-            android:textColor="@color/black" />
+            android:textStyle="bold"
+            android:text="Rawat Tanaman Bersama DaunSehat" />
 
         <ImageView
             android:id="@+id/img_description"
-            android:layout_width="165dp"
-            android:layout_height="165dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:src="@drawable/img_viewer"
             android:contentDescription="@string/viewer_image_desc" />
     </LinearLayout>
@@ -353,7 +197,7 @@
         app:layout_constraintTop_toBottomOf="@id/section_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="36dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp">
 
@@ -393,8 +237,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"/>
+        android:layout_marginTop="16dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

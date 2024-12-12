@@ -131,7 +131,7 @@ class PredictResultFragment : Fragment() {
 
         binding.btnFinish.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, HistoryFragment())
+                .replace(R.id.fragment_container, HomePageFragment())
                 .commit()
         }
 
