@@ -13,7 +13,7 @@ import com.example.daunsehat.R
 import com.example.daunsehat.databinding.ActivityMainBinding
 import com.example.daunsehat.features.authentication.login.presentation.LoginActivity
 import com.example.daunsehat.features.community.presentation.CommunityFragment
-import com.example.daunsehat.features.detection.presentation.BottomSheetDetectionFragment
+import com.example.daunsehat.features.detection.presentation.BottomSheetPredictFragment
 import com.example.daunsehat.features.history.presentation.HistoryFragment
 import com.example.daunsehat.features.homepage.presentation.HomePageFragment
 import com.example.daunsehat.features.main.viewmodel.MainViewModel
@@ -59,22 +59,28 @@ class MainActivity : AppCompatActivity() {
 
         setupBottomNavigation()
 
-        binding.fab.setOnClickListener {
-            val bottomSheetFragment = BottomSheetDetectionFragment()
-            val fragmentTransaction = supportFragmentManager.beginTransaction()
+        if (NetworkUtils.isInternetAvailable(this)) {
+            binding.fab.setOnClickListener {
+                clearBackStack()
+                val bottomSheetFragment = BottomSheetPredictFragment()
+                val fragmentTransaction = supportFragmentManager.beginTransaction()
 
-            val existingFragment =
-                supportFragmentManager.findFragmentByTag(BottomSheetDetectionFragment::class.java.simpleName)
+                val existingFragment =
+                    supportFragmentManager.findFragmentByTag(BottomSheetPredictFragment::class.java.simpleName)
 
-            if (existingFragment != null) {
-                fragmentTransaction.show(existingFragment)
-            } else {
-                fragmentTransaction.add(R.id.bottom_sheet_container, bottomSheetFragment, BottomSheetDetectionFragment::class.java.simpleName)
+                if (existingFragment != null) {
+                    fragmentTransaction.show(existingFragment)
+                } else {
+                    fragmentTransaction.add(R.id.bottom_sheet_container, bottomSheetFragment, BottomSheetPredictFragment::class.java.simpleName)
+                }
+                fragmentTransaction.commit()
             }
-            fragmentTransaction.commit()
+        } else {
+            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
         }
 
         if (savedInstanceState == null) {
+            clearBackStack()
             showFragment(HomePageFragment())
         }
     }
@@ -86,28 +92,32 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.menu_home -> {
                     if (currentFragment !is HomePageFragment) {
+                        clearBackStack()
                         showFragment(HomePageFragment())
                     }
                     true
                 }
                 R.id.menu_history -> {
                     if (currentFragment !is HistoryFragment) {
+                        clearBackStack()
                         showFragment(HistoryFragment())
                     }
                     true
                 }
                 R.id.menu_detection -> {
+                    clearBackStack()
                     true
                 }
                 R.id.menu_community -> {
                     if (currentFragment !is CommunityFragment) {
+                        clearBackStack()
                         showFragment(CommunityFragment())
                     }
-                    Log.d("MainActivity", "Show community fragment")
                     true
                 }
                 R.id.menu_profile -> {
                     if (currentFragment !is ProfileFragment) {
+                        clearBackStack()
                         showFragment(ProfileFragment())
                     }
                     true
@@ -121,6 +131,15 @@ class MainActivity : AppCompatActivity() {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, fragment)
         fragmentTransaction.commit()
+    }
+
+    private fun clearBackStack() {
+        val fragmentManager = supportFragmentManager
+        if (fragmentManager.backStackEntryCount > 0) {
+            for (i in 0 until fragmentManager.backStackEntryCount) {
+                fragmentManager.popBackStack()
+            }
+        }
     }
 
     companion object {

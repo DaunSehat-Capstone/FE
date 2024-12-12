@@ -1,7 +1,6 @@
 package com.example.daunsehat.features.detection.presentation
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -9,17 +8,39 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import com.example.daunsehat.R
 import com.example.daunsehat.databinding.BottomSheetImageSourceBinding
+import com.example.daunsehat.features.authentication.login.presentation.LoginActivity
+import com.example.daunsehat.features.detection.presentation.viewmodel.PredictViewModel
+import com.example.daunsehat.utils.NetworkUtils
+import com.example.daunsehat.utils.ViewModelFactory
 import com.example.daunsehat.utils.rotateFile
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.yalantis.ucrop.UCrop
 import java.io.File
 
-class BottomSheetDetectionFragment : BottomSheetDialogFragment() {
+class BottomSheetPredictFragment : BottomSheetDialogFragment() {
     private var _binding: BottomSheetImageSourceBinding? = null
     private val binding get() = _binding!!
+
+    private var currentImageUri: Uri? = null
+
+    private val viewModel by viewModels<PredictViewModel> {
+        ViewModelFactory.getInstance(requireContext())
+    }
+
+    private val pickMediaLauncher = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
+        if (uri != null) {
+            cropImage(uri)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,10 +54,34 @@ class BottomSheetDetectionFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        dialog?.setCanceledOnTouchOutside(true)
+        dialog?.setOnShowListener {
+            val bottomSheetDialog = dialog as BottomSheetDialog
+            val bottomSheet =
+                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let {
+                val behavior = BottomSheetBehavior.from(it)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+        observeSession()
+    }
 
-        isCancelable = true
+    private fun observeSession() {
+        viewModel.getSession().observe(viewLifecycleOwner) { user ->
+            if (!user.isLogin) {
+                startActivity(Intent(requireContext(), LoginActivity::class.java))
+                requireActivity().finish()
+            } else {
+                if (NetworkUtils.isInternetAvailable(requireContext())) {
+                    setupAction()
+                } else {
+                    Toast.makeText(requireContext(), "No internet connection", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
+    private fun setupAction() {
         binding.btnCancel.setOnClickListener {
             dismiss()
         }
@@ -75,54 +120,46 @@ class BottomSheetDetectionFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun startGallery() {
-        pickMediaLauncher.launch("image/*")
-    }
-
-    private val pickMediaLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        if (uri != null) {
-            cropImage(uri)
-        } else {
-            Log.d("Photo Picker", "No media selected")
-        }
-    }
-
     private fun cropImage(sourceUri: Uri) {
         val fileName = "cropped_image_${System.currentTimeMillis()}.jpg"
         val destinationUri = Uri.fromFile(File(requireContext().cacheDir, fileName))
 
         UCrop.of(sourceUri, destinationUri)
-            .withAspectRatio(1f, 1f)
-            .withMaxResultSize(1000, 1000)
             .start(requireContext(), this)
     }
 
+    private fun startGallery() {
+        pickMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == UCrop.REQUEST_CROP) {
-            val resultUri = UCrop.getOutput(data!!)
-            if (resultUri != null) {
-                navigateToDetection(resultUri)
+            if (data != null) {
+                currentImageUri = UCrop.getOutput(data)
+                if (currentImageUri != null) {
+                    navigateToPredict(currentImageUri!!)
+                } else {
+                    Log.e("UCrop", "Crop failed: URI is null")
+                }
             } else {
-                Log.e("UCrop", "Crop failed")
+                Log.e("UCrop", "Crop failed: Data is null")
             }
-        } else if (resultCode == UCrop.RESULT_ERROR) {
-            val cropError = UCrop.getError(data!!)
-            Log.e("UCrop", "Crop error: ${cropError?.message}")
+            dismiss()
         }
     }
 
-    private fun navigateToDetection(croppedUri: Uri) {
-        val fragment = DetectionFragment()
-
+    private fun navigateToPredict(croppedUri: Uri) {
+        val fragment = PredictFragment()
         val bundle = Bundle()
         bundle.putString("CROPPED_IMAGE_URI", croppedUri.toString())
         fragment.arguments = bundle
 
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onDestroyView() {

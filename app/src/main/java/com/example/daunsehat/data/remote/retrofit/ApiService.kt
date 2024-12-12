@@ -1,5 +1,6 @@
 package com.example.daunsehat.data.remote.retrofit
 
+import android.gesture.Prediction
 import com.example.daunsehat.data.remote.response.AddArticleResponse
 import com.example.daunsehat.data.remote.response.DetailArticleResponse
 import com.example.daunsehat.data.remote.response.HistoryPredictResponse
@@ -76,6 +77,13 @@ interface ApiService {
         @Part file: MultipartBody.Part?
     ): ProfileResponse
 
+    @Multipart
+    @POST("/predict")
+    suspend fun predictPlant(
+        @Header("Authorization") token: String,
+        @Part file: MultipartBody.Part
+    ): PredictResponse
+
     @GET("uarticle")
     suspend fun getAllArticle(
         @Header("Authorization") token: String
@@ -113,15 +121,8 @@ interface ApiService {
         @Path("id") articleId: String
     ): Response<UserArticleResponse>
 
-    @POST("/predict")
-    suspend fun predictPlant(
-        @Header("Authorization") token: String,
-        @Part file: MultipartBody.Part,
-    ): PredictResponse
-
     @GET("/predict")
     suspend fun getHistoryPredict(
         @Header("Authorization") token: String
     ): List<HistoryPredictResponseItem>
-
 }

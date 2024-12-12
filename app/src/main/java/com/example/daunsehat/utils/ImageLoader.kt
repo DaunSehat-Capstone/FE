@@ -19,48 +19,36 @@ object ImageLoader {
             .url(imageUrl)
             .build()
 
-        Log.d("ImageLoader", "Downloading image from: $imageUrl")
-
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.e("ImageDownload", "Failed to download image: ${e.message}")
-                // Run on the main thread to update UI
                 Handler(Looper.getMainLooper()).post {
-                    onImageReady(null) // Pass null if download fails
+                    onImageReady(null)
                 }
             }
 
             override fun onResponse(call: Call, response: okhttp3.Response) {
                 if (!response.isSuccessful) {
-                    Log.e("ImageDownload", "Error: ${response.message}")
-                    // Run on the main thread to update UI
                     Handler(Looper.getMainLooper()).post {
-                        onImageReady(null) // Pass null if response is not successful
+                        onImageReady(null)
                     }
                     return
                 }
 
-                // Check if the response body is null or empty
                 val inputStream = response.body?.byteStream()
                 if (inputStream == null) {
-                    Log.e("ImageDownload", "Input stream is null")
                     Handler(Looper.getMainLooper()).post {
-                        onImageReady(null) // Return null if input stream is invalid
+                        onImageReady(null)
                     }
                     return
                 }
 
-                // Try to decode the bitmap from the stream
                 val bitmap = BitmapFactory.decodeStream(inputStream)
 
-                // If bitmap is null, log the failure and return null
                 if (bitmap == null) {
-                    Log.e("ImageDownload", "Failed to decode bitmap from input stream")
                     Handler(Looper.getMainLooper()).post {
-                        onImageReady(null) // Return null if bitmap decoding fails
+                        onImageReady(null)
                     }
                 } else {
-                    // Successfully decoded the bitmap
                     Handler(Looper.getMainLooper()).post {
                         onImageReady(bitmap)
                     }

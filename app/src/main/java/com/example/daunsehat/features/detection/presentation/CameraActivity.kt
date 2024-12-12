@@ -1,6 +1,7 @@
 package com.example.daunsehat.features.detection.presentation
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowInsets
@@ -12,6 +13,7 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.daunsehat.features.main.MainActivity
 import com.example.daunsehat.databinding.ActivityCameraBinding
@@ -29,6 +31,12 @@ class CameraActivity : AppCompatActivity() {
         binding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (!allPermissionsGranted()) {
+            requestPermissions()
+        } else {
+            startCamera()
+        }
+
         binding.btnCaptureImage.setOnClickListener {
             takePhoto()
         }
@@ -40,17 +48,17 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         super.onResume()
         hideSystemUI()
-        startCamera()
+        binding.viewFinder.post {
+            startCamera()
+        }
     }
 
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
-
         val photoFile = createFile(application)
-
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
         imageCapture.takePicture(
@@ -66,30 +74,30 @@ class CameraActivity : AppCompatActivity() {
                 }
 
                 override fun onError(exception: ImageCaptureException) {
-                    Toast.makeText(
-                        this@CameraActivity,
-                        "Gagal mengambil gambar.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this@CameraActivity, "Failed to capture image.", Toast.LENGTH_SHORT).show()
                 }
-
             }
         )
     }
 
-    private fun startCamera() {
 
+    private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+
+            val rotation = binding.viewFinder.display?.rotation ?: 0
+
             val preview = Preview.Builder()
                 .build()
                 .also {
                     it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
                 }
 
-            imageCapture = ImageCapture.Builder().build()
+            imageCapture = ImageCapture.Builder()
+                .setTargetRotation(rotation)
+                .build()
 
             try {
                 cameraProvider.unbindAll()
@@ -100,14 +108,11 @@ class CameraActivity : AppCompatActivity() {
                     imageCapture
                 )
             } catch (e: Exception) {
-                Toast.makeText(
-                    this@CameraActivity,
-                    "Gagal memunculkan kamera.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this, "Failed to start camera.", Toast.LENGTH_SHORT).show()
             }
         }, ContextCompat.getMainExecutor(this))
     }
+
 
     private fun hideSystemUI() {
         @Suppress("DEPRECATION")
@@ -120,5 +125,32 @@ class CameraActivity : AppCompatActivity() {
             )
         }
         supportActionBar?.hide()
+    }
+
+    private val requiredPermissions = arrayOf(
+        android.Manifest.permission.CAMERA,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+
+    private fun allPermissionsGranted() = requiredPermissions.all {
+        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestPermissions() {
+        ActivityCompat.requestPermissions(this, requiredPermissions, PERMISSION_REQUEST_CODE)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (!allPermissionsGranted()) {
+            Toast.makeText(this, "Permission not granted. Exiting...", Toast.LENGTH_SHORT).show()
+            finish()
+        } else {
+            startCamera()
+        }
+    }
+
+    companion object {
+        const val PERMISSION_REQUEST_CODE = 100
     }
 }

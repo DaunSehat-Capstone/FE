@@ -17,7 +17,9 @@ import androidx.core.content.ContextCompat
 import com.example.daunsehat.R
 import com.example.daunsehat.data.repository.ResultApi
 import com.example.daunsehat.databinding.ActivityPostBinding
+import com.example.daunsehat.features.authentication.login.presentation.LoginActivity
 import com.example.daunsehat.features.community.presentation.viewmodel.AddArticleViewModel
+import com.example.daunsehat.utils.NetworkUtils
 import com.example.daunsehat.utils.ViewModelFactory
 import com.example.daunsehat.utils.getImageUri
 import com.example.daunsehat.utils.reduceFileImage
@@ -67,29 +69,48 @@ class AddArticleActivity : AppCompatActivity() {
             }
         }
 
-        binding.btnPost.isEnabled = false
+        observeSession()
 
-        binding.btnPost.backgroundTintList = ContextCompat.getColorStateList(this, R.color.light_grey)
+    }
 
-        binding.etTitle.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                validateInput()
+    private fun observeSession() {
+        viewModel.getSession().observe(this) { user ->
+            if (!user.isLogin) {
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            } else {
+                if (NetworkUtils.isInternetAvailable(this)) {
+
+                    binding.btnPost.isEnabled = false
+
+                    binding.btnPost.backgroundTintList = ContextCompat.getColorStateList(this, R.color.light_grey)
+
+                    binding.etTitle.addTextChangedListener(object : TextWatcher {
+                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                            validateInput()
+                        }
+
+                        override fun afterTextChanged(s: Editable?) {}
+                    })
+
+                    binding.etDescription.addTextChangedListener(object : TextWatcher {
+                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                            validateInput()
+                        }
+
+                        override fun afterTextChanged(s: Editable?) {}
+                    })
+                    setupAction()
+                } else {
+                    Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show()
+                }
             }
+        }
+    }
 
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-        binding.etDescription.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                validateInput()
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-
+    private fun setupAction() {
         binding.btnGalleryBottom.setOnClickListener {
             startGallery()
         }
@@ -130,8 +151,6 @@ class AddArticleActivity : AppCompatActivity() {
         if (uri != null) {
             currentImageUri = uri
             showImage()
-        } else {
-            Log.d("Photo Picker", "No media selected")
         }
     }
 
@@ -189,7 +208,6 @@ class AddArticleActivity : AppCompatActivity() {
                             }
                             is ResultApi.Error -> {
                                 showLoading(false)
-                                Log.d("AddArticleActivityxxx", "postArticle: ${result.error}")
                                 Toast.makeText(this, result.error, Toast.LENGTH_SHORT).show()
                             }
                         }

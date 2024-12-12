@@ -10,13 +10,13 @@ import com.example.daunsehat.features.community.presentation.viewmodel.AddArticl
 import com.example.daunsehat.features.community.presentation.viewmodel.CommunityViewModel
 import com.example.daunsehat.features.community.presentation.viewmodel.DetailArticleViewModel
 import com.example.daunsehat.features.authentication.register.presentation.viewmodel.RegisterViewModel
-import com.example.daunsehat.features.history.data.repository.HistoryRepository
+import com.example.daunsehat.features.detection.presentation.viewmodel.PredictViewModel
+import com.example.daunsehat.features.history.presentation.viewmodel.HistoryViewModel
 import com.example.daunsehat.features.main.viewmodel.MainViewModel
 import com.example.daunsehat.features.profile.presentation.viewmodel.ProfileViewModel
 
 class ViewModelFactory(
-    private val repository: UserRepository,
-    provideHistoryRepository: HistoryRepository,
+    private val repository: UserRepository
     ) : ViewModelProvider.NewInstanceFactory() {
 
         @Suppress("UNCHECKED_CAST")
@@ -43,6 +43,12 @@ class ViewModelFactory(
                 modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                     RegisterViewModel(repository) as T
                 }
+                modelClass.isAssignableFrom(HistoryViewModel::class.java) -> {
+                    HistoryViewModel(repository) as T
+                }
+                modelClass.isAssignableFrom(PredictViewModel::class.java) -> {
+                    PredictViewModel(repository) as T
+                }
                 else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
             }
         }
@@ -56,8 +62,7 @@ class ViewModelFactory(
             if (INSTANCE == null) {
                 synchronized(ViewModelFactory::class.java) {
                     INSTANCE = ViewModelFactory(
-                        Injection.provideUserRepository(context),
-                        Injection.provideHistoryRepository(context)
+                        Injection.provideUserRepository(context)
                     )
                 }
             }

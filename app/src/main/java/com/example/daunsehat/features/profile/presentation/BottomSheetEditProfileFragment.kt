@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.setFragmentResult
@@ -49,38 +50,57 @@ class BottomSheetEditProfileFragment : BottomSheetDialogFragment() {
 
         observeSession()
 
-        dialog?.setOnShowListener { dialog ->
-            val bottomSheetDialog = dialog as BottomSheetDialog
-            val bottomSheet =
-                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+    }
 
-            bottomSheet?.let {
-                val behavior = BottomSheetBehavior.from(it)
-                behavior.isFitToContents = false
-                behavior.halfExpandedRatio = 0.9f
-                behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+    private fun observeSession() {
+        viewModel.getSession().observe(viewLifecycleOwner) { user ->
+            if (!user.isLogin) {
+                startActivity(Intent(requireContext(), LoginActivity::class.java))
+                requireActivity().finish()
+            } else {
+                if (NetworkUtils.isInternetAvailable(requireContext())) {
+                    dialog?.setOnShowListener { dialog ->
+                        val bottomSheetDialog = dialog as BottomSheetDialog
+                        val bottomSheet =
+                            bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+
+                        bottomSheet?.let {
+                            val behavior = BottomSheetBehavior.from(it)
+                            behavior.isFitToContents = false
+                            behavior.halfExpandedRatio = 0.9f
+                            behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                        }
+                    }
+
+                    setupView()
+                    setupAction()
+                }
             }
         }
+    }
 
+    private fun setupAction() {
         binding.btnSave.setOnClickListener {
             val name = binding.etName.text.toString()
             val email = binding.etEmail.text.toString()
 
             if (name.isEmpty() || email.isEmpty()) {
-                Snackbar.make(binding.root, "Name and email cannot be empty", Snackbar.LENGTH_SHORT).show()
-            } else {
+                Toast.makeText(requireContext(), "Name and email cannot be empty", Toast.LENGTH_SHORT).show()
+            } else if ( !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() ) {
+                Toast.makeText(requireContext(), "Invalid email", Toast.LENGTH_SHORT).show()
+            }
+            else {
                 viewModel.editProfile(name, email).observe(viewLifecycleOwner) { result ->
                     when (result) {
                         is ResultApi.Loading -> showLoading(true)
                         is ResultApi.Success -> {
-                            Log.d("EditProfilexxx", "bottomSheet editProfile dataxxx: ${result.data}")
                             showLoading(false)
-                            Snackbar.make(binding.root, "Profile updated", Snackbar.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "Profile updated", Toast.LENGTH_SHORT).show()
                             dismiss()
                         }
                         is ResultApi.Error -> {
                             showLoading(false)
-                            Snackbar.make(binding.root, "Error: ${result.error}", Snackbar.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "Error: ${result.error}", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -92,26 +112,12 @@ class BottomSheetEditProfileFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun observeSession() {
-        viewModel.getSession().observe(viewLifecycleOwner) { user ->
-            if (!user.isLogin) {
-                startActivity(Intent(requireContext(), LoginActivity::class.java))
-                requireActivity().finish()
-            } else {
-                if (NetworkUtils.isInternetAvailable(requireContext())) {
-                    setupView()
-                }
-            }
-        }
-    }
-
     private fun setupView() {
         viewModel.getProfile().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is ResultApi.Loading -> showLoading(true)
                 is ResultApi.Success -> {
                     showLoading(false)
-                    Log.d("EditProfilexxx", "bottomSheet getProfile dataxxx: ${result.data}")
                     val profile = result.data.user
                     profile?.let {
                         binding.etName.setText(it.name)
@@ -120,7 +126,7 @@ class BottomSheetEditProfileFragment : BottomSheetDialogFragment() {
                 }
                 is ResultApi.Error -> {
                     showLoading(false)
-                    Snackbar.make(binding.root, "Error: ${result.error}", Snackbar.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Error: ${result.error}", Toast.LENGTH_SHORT).show()
                 }
             }
         }

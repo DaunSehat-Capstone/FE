@@ -68,12 +68,10 @@ class LoginActivity : AppCompatActivity() {
                 when (result) {
                     is ResultApi.Loading -> {
                         showLoading(true)
-                        Log.d("LoginActivity", "Loading: Login request in progress")
                     }
 
                     is ResultApi.Success -> {
                         showLoading(false)
-                        Log.d("LoginActivity", "Success: Login successful - ${result.data}")
                         result.data.token?.let { it1 ->
                             UserModel(email,
                                 it1
@@ -95,7 +93,6 @@ class LoginActivity : AppCompatActivity() {
 
                     is ResultApi.Error -> {
                         showLoading(false)
-                        Log.e("LoginActivity", "ErrorLogin: ${result.error}")
                         AlertDialog.Builder(this).apply {
                             setTitle("Error")
                             setMessage(result.error)

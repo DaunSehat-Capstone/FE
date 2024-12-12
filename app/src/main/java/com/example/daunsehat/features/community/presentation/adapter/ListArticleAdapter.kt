@@ -69,8 +69,7 @@ class ListArticleAdapter : RecyclerView.Adapter<ListArticleAdapter.ListViewHolde
                     if (context is AppCompatActivity) {
                         if (fragment != null) {
                             context.supportFragmentManager.beginTransaction()
-                                .add(R.id.fragment_container, fragment)
-                                .hide(context.supportFragmentManager.findFragmentById(R.id.fragment_container)!!)
+                                .replace(R.id.fragment_container, fragment)
                                 .addToBackStack(null)
                                 .commit()
                         }

@@ -12,13 +12,6 @@ import kotlinx.coroutines.launch
 class MainViewModel(private val repository: UserRepository) : ViewModel() {
 
     fun getSession(): LiveData<UserModel> {
-        Log.d("MainViewModel", "getSession: Called")
         return repository.getSession().asLiveData()
-    }
-
-    fun logout() {
-        viewModelScope.launch {
-            repository.logout()
-        }
     }
 }
