@@ -60,6 +60,28 @@ class ProfileFragment : Fragment(), ListUserArticleAdapter.OnDeleteArticleListen
 
         observeSession()
 
+    }
+
+    private fun observeSession() {
+        viewModel.getSession().observe(viewLifecycleOwner) { user ->
+            if (!user.isLogin) {
+                startActivity(Intent(requireContext(), LoginActivity::class.java))
+                requireActivity().finish()
+            } else {
+                if (NetworkUtils.isInternetAvailable(requireContext())) {
+                    binding.rvUserArticles.layoutManager = LinearLayoutManager(requireContext())
+                    binding.rvUserArticles.adapter = adapter
+
+                    setupView()
+                    setupAction()
+                } else {
+                    Toast.makeText(requireContext(), "No Internet Connection", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun setupAction() {
         binding.ivMenu.setOnClickListener {
             showLogoutMenu(it)
         }
@@ -87,29 +109,7 @@ class ProfileFragment : Fragment(), ListUserArticleAdapter.OnDeleteArticleListen
 
             popupMenu.show()
         }
-    }
 
-    private fun observeSession() {
-        viewModel.getSession().observe(viewLifecycleOwner) { user ->
-            if (!user.isLogin) {
-                startActivity(Intent(requireContext(), LoginActivity::class.java))
-                requireActivity().finish()
-            } else {
-                if (NetworkUtils.isInternetAvailable(requireContext())) {
-                    binding.rvUserArticles.layoutManager = LinearLayoutManager(requireContext())
-                    binding.rvUserArticles.adapter = adapter
-
-                    setupView()
-                    setupAction()
-                } else {
-                    Snackbar.make(binding.root, "No Internet Connection", Snackbar.LENGTH_SHORT)
-                        .show()
-                }
-            }
-        }
-    }
-
-    private fun setupAction() {
         binding.fabCreatePost.setOnClickListener {
             val intent = Intent(requireContext(), AddArticleActivity::class.java)
             addArticleLauncher.launch(intent)
@@ -124,7 +124,6 @@ class ProfileFragment : Fragment(), ListUserArticleAdapter.OnDeleteArticleListen
                     showLoading(false)
                     val profile = result.data.user
                     profile?.let {
-                        Log.d("ProfileFragment", "Image URLxxx: ${it.imageUrl}")
                         binding.tvUsername.text = it.name
                         binding.tvEmail.text = it.email
 
@@ -136,20 +135,15 @@ class ProfileFragment : Fragment(), ListUserArticleAdapter.OnDeleteArticleListen
                                     } ?: run {
                                         binding.ivPhotoProfile.setImageResource(R.drawable.ic_photo_profile)
                                     }
-                                } else {
-                                    Log.d("ProfileFragment", "Fragment is not active; skipping update")
                                 }
                             }
                         }
-                        Log.d("EditProfilexxx", "Profile dataxxx: ${result.data}")
-                        Log.d("EditPhotoProfilexxx", "PhotoProfile dataxxx: ${result.data}")
-
                     }
                 }
 
                 is ResultApi.Error -> {
                     showLoading(false)
-                    Snackbar.make(binding.root, "Error: ${result.error}", Snackbar.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Error: ${result.error}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -161,7 +155,6 @@ class ProfileFragment : Fragment(), ListUserArticleAdapter.OnDeleteArticleListen
                 is ResultApi.Loading -> showLoading(true)
                 is ResultApi.Success -> {
                     showLoading(false)
-                    Log.d("ProfileFragmentxxx", "UserArticle: ${result.data}")
                     if (result.data.isEmpty()) {
                         showNoDataMessage(true)
                     } else {
@@ -172,7 +165,7 @@ class ProfileFragment : Fragment(), ListUserArticleAdapter.OnDeleteArticleListen
 
                 is ResultApi.Error -> {
                     showLoading(false)
-                    Snackbar.make(binding.root, "Error: ${result.error}", Snackbar.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Error: ${result.error}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -225,13 +218,11 @@ class ProfileFragment : Fragment(), ListUserArticleAdapter.OnDeleteArticleListen
     }
 
     override fun onDeleteArticle(articleId: String) {
-        Log.d("ProfileFragment", "Deleting Article ID: $articleId")
         viewModel.deleteUserArticle(articleId).observe(viewLifecycleOwner) { result ->
             when (result) {
                 is ResultApi.Loading -> showLoading(true)
                 is ResultApi.Success -> {
                     Toast.makeText(requireContext(), result.data.message, Toast.LENGTH_SHORT).show()
-                    Log.d("ProfileFragment", "Delete Success: ${result.data.message}")
                     adapter.removeArticleById(articleId)
                     showLoading(false)
                 }

@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
@@ -16,7 +17,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.daunsehat.R
 import com.example.daunsehat.data.repository.ResultApi
 import com.example.daunsehat.databinding.BottomSheetEditPhotoProfileBinding
-import com.example.daunsehat.databinding.BottomSheetEditProfileBinding
 import com.example.daunsehat.features.authentication.login.presentation.LoginActivity
 import com.example.daunsehat.features.profile.presentation.viewmodel.ProfileViewModel
 import com.example.daunsehat.utils.NetworkUtils
@@ -25,7 +25,6 @@ import com.example.daunsehat.utils.reduceFileImage
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import java.io.File
 
@@ -53,19 +52,9 @@ class BottomSheetEditPhotoProfileFragment : BottomSheetDialogFragment() {
 
         observeSession()
 
-        dialog?.setOnShowListener { dialog ->
-            val bottomSheetDialog = dialog as BottomSheetDialog
-            val bottomSheet =
-                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+    }
 
-            bottomSheet?.let {
-                val behavior = BottomSheetBehavior.from(it)
-                behavior.isFitToContents = false
-                behavior.halfExpandedRatio = 0.9f
-                behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-            }
-        }
-
+    private fun setupAction() {
         binding.btnEditPhoto.setOnClickListener {
             openGallery()
         }
@@ -80,18 +69,17 @@ class BottomSheetEditPhotoProfileFragment : BottomSheetDialogFragment() {
                         is ResultApi.Loading -> showLoading(true)
                         is ResultApi.Success -> {
                             showLoading(false)
-                            Log.d("EditPhotoProfilexxx", "editPhotoProfile dataxxx: ${result.data}")
-                            Snackbar.make(binding.root, "Photo updated successfully", Snackbar.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "Photo profile updated", Toast.LENGTH_SHORT).show()
                             dismiss()
                         }
                         is ResultApi.Error -> {
                             showLoading(false)
-                            Snackbar.make(binding.root, "Error: ${result.error}", Snackbar.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "Error: ${result.error}", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
             } else {
-                Snackbar.make(binding.root, "No photo selected", Snackbar.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please select an image", Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -111,16 +99,14 @@ class BottomSheetEditPhotoProfileFragment : BottomSheetDialogFragment() {
         if (uri != null) {
             currentImageUri = uri
             startCrop(uri)
-        } else {
-            Log.d("Photo Picker", "No media selected")
         }
     }
 
     private fun startCrop(sourceUri: Uri) {
         val destinationUri = Uri.fromFile(File(requireContext().cacheDir, "cropped_image.jpg"))
         UCrop.of(sourceUri, destinationUri)
-            .withAspectRatio(1f, 1f)  // Set to 1:1 ratio for square crop
-            .withMaxResultSize(500, 500) // Optionally set max resolution
+            .withAspectRatio(1f, 1f)
+            .withMaxResultSize(500, 500)
             .start(requireContext(), this)
     }
 
@@ -140,9 +126,6 @@ class BottomSheetEditPhotoProfileFragment : BottomSheetDialogFragment() {
             }
             binding.ivProfilePhoto.invalidate()
             binding.ivProfilePhoto.requestLayout()
-        } else if (resultCode == UCrop.RESULT_ERROR) {
-            val error = UCrop.getError(data!!)
-            Log.e("UCrop", "Error: $error")
         }
     }
 
@@ -153,7 +136,21 @@ class BottomSheetEditPhotoProfileFragment : BottomSheetDialogFragment() {
                 requireActivity().finish()
             } else {
                 if (NetworkUtils.isInternetAvailable(requireContext())) {
+                    dialog?.setOnShowListener { dialog ->
+                        val bottomSheetDialog = dialog as BottomSheetDialog
+                        val bottomSheet =
+                            bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+
+                        bottomSheet?.let {
+                            val behavior = BottomSheetBehavior.from(it)
+                            behavior.isFitToContents = false
+                            behavior.halfExpandedRatio = 0.9f
+                            behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                        }
+                    }
+
                     setupView()
+                    setupAction()
                 }
             }
         }
@@ -165,7 +162,6 @@ class BottomSheetEditPhotoProfileFragment : BottomSheetDialogFragment() {
                 is ResultApi.Loading -> showLoading(true)
                 is ResultApi.Success -> {
                     showLoading(false)
-                    Log.d("EditPhotoProfilexxx", "PhotoProfile dataxxx: ${result.data}")
                     val profile = result.data.user
                     profile?.let {
                         Glide.with(requireContext())
@@ -177,7 +173,7 @@ class BottomSheetEditPhotoProfileFragment : BottomSheetDialogFragment() {
                 }
                 is ResultApi.Error -> {
                     showLoading(false)
-                    Snackbar.make(binding.root, "Error: ${result.error}", Snackbar.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Error: ${result.error}", Toast.LENGTH_SHORT).show()
                 }
             }
         }

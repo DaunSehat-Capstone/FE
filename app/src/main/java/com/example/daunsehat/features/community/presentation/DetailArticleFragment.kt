@@ -1,17 +1,21 @@
 package com.example.daunsehat.features.community.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.daunsehat.R
 import com.example.daunsehat.data.repository.ResultApi
 import com.example.daunsehat.databinding.FragmentDetailArticleBinding
+import com.example.daunsehat.features.authentication.login.presentation.LoginActivity
 import com.example.daunsehat.features.community.presentation.viewmodel.DetailArticleViewModel
+import com.example.daunsehat.utils.NetworkUtils
 import com.example.daunsehat.utils.ViewModelFactory
 import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
@@ -37,33 +41,29 @@ class DetailArticleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observeSession()
+    }
+
+    private fun observeSession() {
         val articleId = arguments?.getString(EXTRA_ARTICLE_ID)
-
-
         viewModel.getSession().observe(viewLifecycleOwner) { user ->
-            if (user.token.isNotEmpty()) {
-                Log.d("DetailArticleFragmentxxx", "onViewCreated: ${user.token}")
-                setupView(articleId)
-            } else {
-                Snackbar.make(
-                    binding.root,
-                    "Invalid session. Please login again.",
-                    Snackbar.LENGTH_SHORT
-                ).show()
+            if (!user.isLogin) {
+                startActivity(Intent(requireContext(), LoginActivity::class.java))
                 requireActivity().finish()
+            } else {
+                if (NetworkUtils.isInternetAvailable(requireContext())) {
+                    setupView(articleId)
+                    setupAction()
+                } else {
+                    Toast.makeText(requireContext(), "No internet connection", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
-
-        binding.btnBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
         }
     }
 
     private fun setupView(articleId: String?) {
         showLoading(true)
-        Log.d("DetailArticleFragmentxxx", "setupView: $articleId")
         if (articleId != null) {
-            Log.d("DetailArticleFragmentxxx", "setupView1: $articleId")
             viewModel.getDetailArticle(articleId).observe(viewLifecycleOwner) { article ->
                 when (article) {
                     is ResultApi.Loading -> showLoading(true)
@@ -86,11 +86,10 @@ class DetailArticleFragment : Fragment() {
                                 .load(article.data.imageArticle)
                                 .into(binding.ivArticleImage)
                         }
-                        Log.d("DetailArticleFragmentxxx", "Success: ${article.data}")
                     }
                     is ResultApi.Error -> {
                         showLoading(false)
-                        Snackbar.make(binding.root, "Error: ${article.error}", Snackbar.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Error: ${article.error}", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -106,6 +105,12 @@ class DetailArticleFragment : Fragment() {
             outputFormat.format(date!!)
         } catch (e: Exception) {
             dateString
+        }
+    }
+
+    private fun setupAction() {
+        binding.btnBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
         }
     }
 

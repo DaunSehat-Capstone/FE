@@ -26,11 +26,11 @@ class RetryInterceptor(private val maxRetries: Int) : Interceptor {
 
 object ApiConfig {
     private const val BASE_URL = BuildConfig.BASE_URL
-    private const val TIMEOUT = 15L
+    private const val TIMEOUT = 30L
 
     private val loggingInterceptor: HttpLoggingInterceptor by lazy {
         HttpLoggingInterceptor { message ->
-            android.util.Log.d("API_LOG", message)
+            android.util.Log.d("API_LOGxxx", message)
         }.apply {
             level = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor.Level.BODY

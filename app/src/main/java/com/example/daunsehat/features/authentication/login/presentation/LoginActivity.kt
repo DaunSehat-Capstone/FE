@@ -1,11 +1,13 @@
 package com.example.daunsehat.features.authentication.login.presentation
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +30,12 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finishAffinity()
+            }
+        })
 
         binding.btnLogin.isEnabled = false
 
@@ -60,12 +68,10 @@ class LoginActivity : AppCompatActivity() {
                 when (result) {
                     is ResultApi.Loading -> {
                         showLoading(true)
-                        Log.d("LoginActivity", "Loading: Login request in progress")
                     }
 
                     is ResultApi.Success -> {
                         showLoading(false)
-                        Log.d("LoginActivity", "Success: Login successful - ${result.data}")
                         result.data.token?.let { it1 ->
                             UserModel(email,
                                 it1
@@ -87,7 +93,6 @@ class LoginActivity : AppCompatActivity() {
 
                     is ResultApi.Error -> {
                         showLoading(false)
-                        Log.e("LoginActivity", "ErrorLogin: ${result.error}")
                         AlertDialog.Builder(this).apply {
                             setTitle("Error")
                             setMessage(result.error)
@@ -108,7 +113,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun navigateToMain() {
         val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
     }
@@ -126,4 +131,5 @@ class LoginActivity : AppCompatActivity() {
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
+
 }

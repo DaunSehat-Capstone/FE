@@ -2,7 +2,6 @@ package com.example.daunsehat.features.community.presentation
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.daunsehat.R
@@ -21,7 +19,6 @@ import com.example.daunsehat.features.community.presentation.adapter.ListArticle
 import com.example.daunsehat.features.community.presentation.viewmodel.CommunityViewModel
 import com.example.daunsehat.utils.NetworkUtils
 import com.example.daunsehat.utils.ViewModelFactory
-import com.google.android.material.snackbar.Snackbar
 
 class CommunityFragment : Fragment() {
     private var _binding: FragmentCommunityBinding? = null
@@ -55,11 +52,6 @@ class CommunityFragment : Fragment() {
 
         observeSession()
 
-        binding.btnSearch.setOnClickListener {
-            val query = binding.etSearch.text.toString().trim()
-            searchArticles(query)
-        }
-
     }
 
     private fun observeSession() {
@@ -76,7 +68,6 @@ class CommunityFragment : Fragment() {
                     setupAction()
                 } else {
                     Toast.makeText(requireContext(), "No Internet Connection", Toast.LENGTH_SHORT).show()
-
                 }
             }
         }
@@ -101,8 +92,7 @@ class CommunityFragment : Fragment() {
                 }
                 is ResultApi.Error -> {
                     showLoading(false)
-                    Snackbar.make(binding.root, "Error: ${result.error}", Snackbar.LENGTH_SHORT).show()
-                    Log.d("CommunityFragment", "Error: ${result.error}")
+                    Toast.makeText(requireContext(), "Error: ${result.error}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -113,6 +103,11 @@ class CommunityFragment : Fragment() {
             val intent = Intent(requireContext(), AddArticleActivity::class.java)
             addArticleLauncher.launch(intent)
         }
+
+        binding.btnSearch.setOnClickListener {
+            val query = binding.etSearch.text.toString().trim()
+            searchArticles(query)
+        }
     }
 
     private fun setupView() {
@@ -121,7 +116,6 @@ class CommunityFragment : Fragment() {
                 is ResultApi.Loading -> showLoading(true)
                 is ResultApi.Success -> {
                     showLoading(false)
-                    Log.d("CommunityFragmentxxx", "Articles loaded: ${result.data.size}")
                     if (result.data.isEmpty()) {
                         showNoDataMessage(true)
                     } else {
@@ -131,12 +125,10 @@ class CommunityFragment : Fragment() {
                 }
                 is ResultApi.Error -> {
                     showLoading(false)
-                    Snackbar.make(binding.root, "Error: ${result.error}", Snackbar.LENGTH_SHORT).show()
-                    Log.d("CommunityFragment", "Errorxxx: ${result.error}")
+                    Toast.makeText(requireContext(), "Error: ${result.error}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
-
     }
     private fun showNoDataMessage(show: Boolean) {
         binding.tvNoData.visibility = if (show) View.VISIBLE else View.GONE

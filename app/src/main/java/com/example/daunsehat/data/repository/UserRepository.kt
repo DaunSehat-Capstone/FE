@@ -8,8 +8,10 @@ import com.example.daunsehat.data.pref.UserPreference
 import com.example.daunsehat.data.remote.response.AddArticleResponse
 import com.example.daunsehat.data.remote.response.DetailArticleResponse
 import com.example.daunsehat.data.remote.response.ErrorResponse
+import com.example.daunsehat.data.remote.response.HistoryPredictResponseItem
 import com.example.daunsehat.data.remote.response.ListArticleItem
 import com.example.daunsehat.data.remote.response.LoginResponse
+import com.example.daunsehat.data.remote.response.PredictResponse
 import com.example.daunsehat.data.remote.response.ProfileResponse
 import com.example.daunsehat.data.remote.response.UserArticleResponse
 import com.example.daunsehat.data.remote.response.RegisterResponse
@@ -225,12 +227,10 @@ class UserRepository private constructor(
         emit(ResultApi.Loading)
         try {
             val token = "Bearer ${userPreference.getSession().first().token}"
-            Log.d("DeleteArticlexxx", "Token: $token, ArticleID: $articleId")
             val response = apiService.deleteUserArticle(token, articleId)
             if (response.isSuccessful) {
                 response.body()?.let {
                     emit(ResultApi.Success(it))
-                    Log.d("DeleteArticlexxx", "Success: ${it.message}")
                 } ?: run {
                     emit(ResultApi.Error("Response body is null"))
                 }
@@ -282,6 +282,49 @@ class UserRepository private constructor(
                 )
                 emit(ResultApi.Success(successResponse))
             }
+        } catch (e: HttpException) {
+            val errorMessage = e.response()?.errorBody()?.string()?.let { errorBody ->
+                Gson().fromJson(errorBody, ErrorResponse::class.java).error
+            } ?: e.message()
+            emit(ResultApi.Error(errorMessage))
+        } catch (e: IOException) {
+            emit(ResultApi.Error("No internet connection. Please check your network."))
+        } catch (e: Exception){
+            emit(ResultApi.Error("An unexpected error occurred: ${e.message}"))
+        } catch (e: SocketTimeoutException) {
+            emit(ResultApi.Error("Timeout: Server took too long to respond"))
+        }
+    }
+
+    fun predictPlant(imageFile: File): LiveData<ResultApi<PredictResponse>> = liveData {
+        emit(ResultApi.Loading)
+        try {
+            val token = userPreference.getSession().first().token
+            val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
+            val multipartBody = MultipartBody.Part.createFormData("file", imageFile.name, requestImageFile)
+            val response = apiService.predictPlant("Bearer $token", multipartBody)
+            emit(ResultApi.Success(response))
+        } catch (e: HttpException) {
+            Log.e("PredictResultFragmentxxxx", "Exception: ${e.localizedMessage}", e)
+            val errorMessage = e.response()?.errorBody()?.string()?.let { errorBody ->
+                Gson().fromJson(errorBody, ErrorResponse::class.java).error
+            } ?: e.message()
+            emit(ResultApi.Error(errorMessage))
+        } catch (e: IOException) {
+            emit(ResultApi.Error("No internet connection. Please check your network."))
+        } catch (e: Exception) {
+            emit(ResultApi.Error("An unexpected error occurred: ${e.message}"))
+        } catch (e: SocketTimeoutException) {
+            emit(ResultApi.Error("Timeout: Server took too long to respond"))
+        }
+    }
+
+    fun getHistoryPredict(): LiveData<ResultApi<List<HistoryPredictResponseItem>>> = liveData {
+        emit(ResultApi.Loading)
+        try {
+            val token = userPreference.getSession().first().token
+            val response = apiService.getHistoryPredict("Bearer $token")
+            emit(ResultApi.Success(response))
         } catch (e: HttpException) {
             val errorMessage = e.response()?.errorBody()?.string()?.let { errorBody ->
                 Gson().fromJson(errorBody, ErrorResponse::class.java).error
