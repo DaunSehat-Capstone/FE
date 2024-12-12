@@ -140,11 +140,7 @@ class BottomSheetPredictFragment : BottomSheetDialogFragment() {
                 currentImageUri = UCrop.getOutput(data)
                 if (currentImageUri != null) {
                     navigateToPredict(currentImageUri!!)
-                } else {
-                    Log.e("UCrop", "Crop failed: URI is null")
                 }
-            } else {
-                Log.e("UCrop", "Crop failed: Data is null")
             }
             dismiss()
         }

@@ -88,15 +88,19 @@ class PredictResultFragment : Fragment() {
                             val predict = result.data.prediction
                             if (predict != null) {
                                 updateUI(predict)
-                            } else {
-                                binding.tvError.visibility = View.VISIBLE
-                                binding.tvError.text = "Prediction data not found"
                             }
                         }
                         is ResultApi.Error -> {
                             showLoading(false)
-                            binding.tvError.visibility = View.VISIBLE
-                            Toast.makeText(requireContext(), "Error: ${result.error}", Toast.LENGTH_SHORT).show()
+                            if (result.error == "An unexpected error occurred: closed") {
+                                binding.tvError.visibility = View.VISIBLE
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Error: ${result.error}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     }
                 }

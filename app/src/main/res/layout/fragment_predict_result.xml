@@ -205,7 +205,7 @@
                 android:layout_marginBottom="120dp"
                 android:fontFamily="@font/nunito_medium"
                 android:gravity="center"
-                android:text="Ups! Deteksi gagal. \n\nCoba kembali dengan gambar yang \nlebih jelas. Pastikan Anda memiliki \nkoneksi internet yang stabil."
+                android:text="Ups! Prediksi tidak ditemukan."
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:visibility="gone"

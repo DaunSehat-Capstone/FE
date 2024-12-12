@@ -126,9 +126,6 @@ class BottomSheetEditPhotoProfileFragment : BottomSheetDialogFragment() {
             }
             binding.ivProfilePhoto.invalidate()
             binding.ivProfilePhoto.requestLayout()
-        } else if (resultCode == UCrop.RESULT_ERROR) {
-            val error = UCrop.getError(data!!)
-            Log.e("UCrop", "Error: $error")
         }
     }
 
