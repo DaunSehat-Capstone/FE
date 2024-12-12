@@ -2,6 +2,7 @@ package com.example.daunsehat.data.remote.retrofit
 
 import com.example.daunsehat.data.remote.response.AddArticleResponse
 import com.example.daunsehat.data.remote.response.DetailArticleResponse
+import com.example.daunsehat.data.remote.response.GuidanceResponse
 import com.example.daunsehat.data.remote.response.ListArticleItem
 import com.example.daunsehat.data.remote.response.LoginResponse
 import com.example.daunsehat.data.remote.response.ProfileResponse
@@ -110,4 +111,30 @@ interface ApiService {
         @Path("id") articleId: String
     ): Response<UserArticleResponse>
 
+    @Multipart
+    @POST("garticle/")
+    suspend fun postGuidanceArticle(
+        @Header("Authorization") token: String,
+        @Part file: MultipartBody.Part?,
+        @Part("title_guidance") title: RequestBody,
+        @Part("body_guidance") body: RequestBody,
+        @Part("category_guidance") category: RequestBody
+    ): Response<Void>
+
+    @GET("garticle/")
+    suspend fun getAllGuidanceArticles(
+        @Header("Authorization") token: String
+    ): List<GuidanceResponse>
+
+    @GET("garticle/{category}")
+    suspend fun getGuidanceArticlesByCategory(
+        @Header("Authorization") token: String,
+        @Path("category") category: String
+    ): List<GuidanceResponse>
+
+    @DELETE("garticle/{id}")
+    suspend fun deleteGuidanceArticleById(
+        @Header("Authorization") token: String,
+        @Path("id") articleId: Int
+    ): Response<Void>
 }

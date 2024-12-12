@@ -2,15 +2,6 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.DaunSehat" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your light theme here. -->
-
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/green</item>
-        <item name="colorSecondary">@color/secondary</item>
-        <item name="colorSecondaryVariant">@color/light_brown</item>
-        <item name="colorTertiary">@color/tertiary</item>
-
-        <item name="materialSwitchStyle">@style/CustomSwitchStyle</item>
-
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:statusBarColor">@color/green</item>
     </style>

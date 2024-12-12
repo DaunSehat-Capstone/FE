@@ -8,18 +8,20 @@
 
     <TextView
         android:id="@+id/txt_greeting"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Hello, user!"
         style="@style/TextHeadlineLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="8dp"
+        android:text="Hello, user!"
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/img_logo"
-        app:layout_constraintTop_toTopOf="@id/img_logo"
         app:layout_constraintBottom_toBottomOf="@id/img_logo"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="24dp"/>
+        app:layout_constraintEnd_toStartOf="@id/img_logo"
+        app:layout_constraintHorizontal_bias="0.125"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/img_logo"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/img_logo"
@@ -113,7 +115,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:columnCount="7"
-                    android:rowCount="6"
                     android:orientation="horizontal"
                     android:padding="8dp" />
 
@@ -191,7 +192,7 @@
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/header_tips"
+        android:id="@+id/header_guidance"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/section_description"
@@ -202,7 +203,7 @@
         android:layout_marginEnd="24dp">
 
         <TextView
-            android:id="@+id/txt_tips_title"
+            android:id="@+id/txt_guidance_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Tips Perawatan"
@@ -230,13 +231,15 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_tips"
+        android:id="@+id/recycler_guidance"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/header_tips"
+        app:layout_constraintTop_toBottomOf="@id/header_guidance"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

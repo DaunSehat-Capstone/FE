@@ -8,22 +8,27 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.daunsehat.R
-import com.example.daunsehat.TipsAdapter
-import com.example.daunsehat.data.pref.TipItem
+import com.example.daunsehat.data.pref.GuidanceItem
+import com.example.daunsehat.data.remote.response.ProfileResponse
+import com.example.daunsehat.data.repository.ResultApi
 import com.example.daunsehat.databinding.FragmentHomePageBinding
+import com.example.daunsehat.features.guidance.presentation.GuidanceAdapter
+import com.example.daunsehat.features.guidance.presentation.GuidanceDetailActivity
+import com.example.daunsehat.features.guidance.presentation.GuidanceMenuActivity
+import com.example.daunsehat.features.profile.presentation.viewmodel.ProfileViewModel
 import com.example.daunsehat.features.reminder.presentation.ReminderReceiver
-import com.example.daunsehat.guidance.GuidanceDetailActivity
+import com.example.daunsehat.utils.ViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -36,6 +41,9 @@ class HomePageFragment : Fragment() {
     private lateinit var morningIntent: PendingIntent
     private lateinit var afternoonIntent: PendingIntent
     private val prefsName = "reminder_prefs"
+    private val profileViewModel: ProfileViewModel by viewModels {
+        ViewModelFactory.getInstance(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +56,7 @@ class HomePageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        fetchUserProfile()
         checkNotificationPermission()
         generateWeeklyCalendar()
 
@@ -83,13 +92,10 @@ class HomePageFragment : Fragment() {
                     setMorningAlarm()
                     setAfternoonAlarm()
                     sharedPreferences.edit().putBoolean("reminder_enabled", true).apply()
-                    Log.d("HomePageFragment", "Alarms successfully set")
                 } else {
                     binding.switchReminder.isChecked = false
-                    Log.e("HomePageFragment", "Permissions missing. Switch turned OFF.")
                 }
             } else {
-                Log.d("HomePageFragment", "Switch turned OFF. Cancelling alarms...")
                 cancelAlarms()
                 sharedPreferences.edit().putBoolean("reminder_enabled", false).apply()
             }
@@ -98,30 +104,31 @@ class HomePageFragment : Fragment() {
 
         updateNextReminderTime()
 
-        val tipsRecyclerView: RecyclerView = view.findViewById(R.id.recycler_tips)
-        val tipsList = listOf(
-            TipItem(R.drawable.img_plant, "Biji - bijian"),
-            TipItem(R.drawable.img_plant, "Kacang - kacangan"),
-            TipItem(R.drawable.img_plant, "Buah - buahan"),
-            TipItem(R.drawable.img_plant, "Sayur - mayur")
+        val guidanceRecyclerView: RecyclerView = view.findViewById(R.id.recycler_guidance)
+        val guidanceList = listOf(
+            GuidanceItem(R.drawable.img_plant, "Biji-bijian"),
+            GuidanceItem(R.drawable.img_plant, "Kacang-kacangan"),
+            GuidanceItem(R.drawable.img_plant, "Buah-buahan"),
+            GuidanceItem(R.drawable.img_plant, "Sayur-mayur"),
+            GuidanceItem(R.drawable.img_plant, "Industri"),
+            GuidanceItem(R.drawable.img_plant, "Rempah"),
+            GuidanceItem(R.drawable.img_plant, "Umbi-umbian"),
+            GuidanceItem(R.drawable.img_plant, "Hias")
         )
 
-        val tipsAdapter = TipsAdapter(tipsList) { tipItem ->
+        val guidanceAdapter = GuidanceAdapter(guidanceList, { guidanceItem ->
             val intent = Intent(requireContext(), GuidanceDetailActivity::class.java)
-            intent.putExtra("tip_name", tipItem.name)
+            intent.putExtra("guidance_name", guidanceItem.name)
             startActivity(intent)
-        }
+        }, useMenuLayout = false)
 
-        tipsRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        tipsRecyclerView.adapter = tipsAdapter
+        guidanceRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        guidanceRecyclerView.adapter = guidanceAdapter
 
         binding.btnShowAll.setOnClickListener {
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment_container, TipsMenuFragment())
-            transaction.addToBackStack(null)
-            transaction.commit()
+            val intent = Intent(requireContext(), GuidanceMenuActivity::class.java)
+            startActivity(intent)
         }
-
     }
 
     private fun setMorningAlarm() {
@@ -134,7 +141,6 @@ class HomePageFragment : Fragment() {
             }
         }
 
-        Log.d("HomePageFragment", "Setting morning alarm at: ${calendar.time}")
 
         val intent = Intent(requireContext(), ReminderReceiver::class.java)
         morningIntent = PendingIntent.getBroadcast(
@@ -147,28 +153,24 @@ class HomePageFragment : Fragment() {
                 calendar.timeInMillis,
                 morningIntent
             )
-            Log.d("HomePageFragment", "Morning Alarm set with setExactAndAllowWhileIdle")
         } else {
             alarmManager.setExact(
                 AlarmManager.RTC_WAKEUP,
                 calendar.timeInMillis,
                 morningIntent
             )
-            Log.d("HomePageFragment", "Morning Alarm set with setExact")
         }
     }
 
     private fun setAfternoonAlarm() {
         val calendar = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 19)
-            set(Calendar.MINUTE, 25)
+            set(Calendar.HOUR_OF_DAY, 16)
+            set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             if (before(Calendar.getInstance())) {
                 add(Calendar.DATE, 1)
             }
         }
-
-        Log.d("HomePageFragment", "Setting afternoon alarm at: ${calendar.time}")
 
         val intent = Intent(requireContext(), ReminderReceiver::class.java)
         afternoonIntent = PendingIntent.getBroadcast(
@@ -181,14 +183,12 @@ class HomePageFragment : Fragment() {
                 calendar.timeInMillis,
                 afternoonIntent
             )
-            Log.d("HomePageFragment", "Morning Alarm set with setExactAndAllowWhileIdle")
         } else {
             alarmManager.setExact(
                 AlarmManager.RTC_WAKEUP,
                 calendar.timeInMillis,
                 afternoonIntent
             )
-            Log.d("HomePageFragment", "Morning Alarm set with setExact")
         }
     }
 
@@ -241,8 +241,9 @@ class HomePageFragment : Fragment() {
             val dayTextView = TextView(requireContext()).apply {
                 text = day
                 textSize = 14f
+                gravity = android.view.Gravity.CENTER
                 setTextColor(resources.getColor(R.color.white, null))
-                setPadding(8, 8, 8, 8)
+                setPadding(16, 16, 16, 16)
             }
             calendarGrid.addView(dayTextView)
         }
@@ -252,15 +253,14 @@ class HomePageFragment : Fragment() {
             val dateTextView = TextView(requireContext()).apply {
                 text = currentDay.toString()
                 textSize = 14f
+                gravity = android.view.Gravity.CENTER
                 setTextColor(resources.getColor(R.color.white, null))
                 setPadding(16, 16, 16, 16)
-                gravity = android.view.Gravity.CENTER
 
                 if (currentDay == today) {
                     setBackgroundResource(R.drawable.bg_highlight)
                 }
             }
-
             calendarGrid.addView(dateTextView)
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
@@ -272,11 +272,8 @@ class HomePageFragment : Fragment() {
             val hasExactAlarmPermission = alarmManager.canScheduleExactAlarms()
 
             if (!hasExactAlarmPermission) {
-                Log.e("HomePageFragment", "Exact Alarm permission NOT granted!")
                 Toast.makeText(context, "Please enable exact alarm permission", Toast.LENGTH_SHORT).show()
                 return false
-            } else {
-                Log.d("HomePageFragment", "Exact Alarm permission is GRANTED")
             }
         }
         return true
@@ -289,10 +286,7 @@ class HomePageFragment : Fragment() {
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
 
-            if (hasNotificationPermission) {
-                Log.d("HomePageFragment", "POST_NOTIFICATIONS permission is GRANTED")
-            } else {
-                Log.e("HomePageFragment", "POST_NOTIFICATIONS permission NOT granted!")
+            if (!hasNotificationPermission) {
                 requestNotificationPermission()
             }
         }
@@ -305,5 +299,24 @@ class HomePageFragment : Fragment() {
                 102
             )
         }
+    }
+
+    private fun fetchUserProfile() {
+        profileViewModel.getProfile().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is ResultApi.Loading -> {
+                }
+                is ResultApi.Success -> {
+                    updateUI(result.data)
+                }
+                is ResultApi.Error -> {
+                }
+            }
+        }
+    }
+
+    private fun updateUI(profile: ProfileResponse) {
+        val userName = profile.user?.name ?: "User"
+        binding.txtGreeting.text = "Hello, $userName!"
     }
 }
