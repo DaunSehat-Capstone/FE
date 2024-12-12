@@ -1,6 +1,7 @@
-package com.example.daunsehat.onboarding
+package com.example.daunsehat.features.onboarding
 
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,8 @@ class OnboardingAdapter(
                         imgOnboarding.setImageDrawable(placeholder)
                     }
                 })
+
+            Log.d("OnboardingAdapter", "Title: ${item.title}, Description: ${item.description}")
 
             txtTitle.text = item.title
             txtDescription.text = item.description

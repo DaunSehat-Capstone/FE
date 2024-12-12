@@ -23,7 +23,7 @@ import com.example.daunsehat.data.pref.GuidanceItem
 import com.example.daunsehat.data.remote.response.ProfileResponse
 import com.example.daunsehat.data.repository.ResultApi
 import com.example.daunsehat.databinding.FragmentHomePageBinding
-import com.example.daunsehat.features.guidance.presentation.GuidanceAdapter
+import com.example.daunsehat.features.guidance.adapter.GuidanceAdapter
 import com.example.daunsehat.features.guidance.presentation.GuidanceDetailActivity
 import com.example.daunsehat.features.guidance.presentation.GuidanceMenuActivity
 import com.example.daunsehat.features.profile.presentation.viewmodel.ProfileViewModel

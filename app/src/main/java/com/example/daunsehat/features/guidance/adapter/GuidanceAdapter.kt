@@ -1,4 +1,4 @@
-package com.example.daunsehat.features.guidance.presentation
+package com.example.daunsehat.features.guidance.adapter
 
 import android.view.LayoutInflater
 import android.view.View

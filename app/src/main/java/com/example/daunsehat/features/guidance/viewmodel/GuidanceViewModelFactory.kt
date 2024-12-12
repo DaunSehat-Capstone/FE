@@ -1,4 +1,4 @@
-package com.example.daunsehat.features.guidance.presentation
+package com.example.daunsehat.features.guidance.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

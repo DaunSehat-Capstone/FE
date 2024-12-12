@@ -1,7 +1,8 @@
-package com.example.daunsehat.onboarding
+package com.example.daunsehat.features.onboarding
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.daunsehat.features.main.MainActivity
@@ -88,6 +89,9 @@ class OnboardingActivity : AppCompatActivity() {
     private fun finishOnboarding() {
         val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
         sharedPreferences.edit().putBoolean("onboarding_completed", true).apply()
+
+        Log.d("OnboardingActivity", "Onboarding completed: ${sharedPreferences.getBoolean("onboarding_completed", false)}")
+
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }

@@ -13,6 +13,8 @@ import com.example.daunsehat.data.remote.retrofit.ApiConfig
 import com.example.daunsehat.data.repository.GuidanceRepository
 import com.example.daunsehat.data.repository.UserRepository
 import com.example.daunsehat.databinding.ActivityGuidanceDetailBinding
+import com.example.daunsehat.features.guidance.viewmodel.GuidanceViewModel
+import com.example.daunsehat.features.guidance.viewmodel.GuidanceViewModelFactory
 
 class GuidanceDetailActivity : AppCompatActivity() {
 

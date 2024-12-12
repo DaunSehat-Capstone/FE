@@ -3,15 +3,14 @@ package com.example.daunsehat.features.main
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import com.example.daunsehat.R
 import com.example.daunsehat.databinding.ActivityMainBinding
 import com.example.daunsehat.features.authentication.login.presentation.LoginActivity
@@ -20,8 +19,8 @@ import com.example.daunsehat.features.detection.presentation.BottomSheetDetectio
 import com.example.daunsehat.features.history.presentation.HistoryFragment
 import com.example.daunsehat.features.homepage.presentation.HomePageFragment
 import com.example.daunsehat.features.main.viewmodel.MainViewModel
+import com.example.daunsehat.features.onboarding.OnboardingActivity
 import com.example.daunsehat.features.profile.presentation.ProfileFragment
-import com.example.daunsehat.onboarding.OnboardingActivity
 import com.example.daunsehat.utils.NetworkUtils
 import com.example.daunsehat.utils.ViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -38,7 +37,6 @@ class MainActivity : AppCompatActivity() {
 
         createNotificationChannel()
 
-        // Onboarding
         val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
         val isOnboardingCompleted = sharedPreferences.getBoolean("onboarding_completed", false)
 

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.daunsehat.R
 import com.example.daunsehat.data.pref.GuidanceItem
 import com.example.daunsehat.databinding.ActivityGuidanceMenuBinding
+import com.example.daunsehat.features.guidance.adapter.GuidanceAdapter
 
 class GuidanceMenuActivity : AppCompatActivity() {
 

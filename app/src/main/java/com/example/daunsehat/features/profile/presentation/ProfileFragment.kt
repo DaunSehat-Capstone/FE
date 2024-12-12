@@ -203,6 +203,10 @@ class ProfileFragment : Fragment(), ListUserArticleAdapter.OnDeleteArticleListen
     }
 
     private fun performLogout() {
+        // onboarding
+        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", AppCompatActivity.MODE_PRIVATE)
+        sharedPreferences.edit().putBoolean("onboarding_completed", false).apply()
+
         viewModel.logout()
         val intent = Intent(requireContext(), LoginActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK

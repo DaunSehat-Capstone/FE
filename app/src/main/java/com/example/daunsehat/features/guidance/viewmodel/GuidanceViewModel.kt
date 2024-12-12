@@ -1,4 +1,4 @@
-package com.example.daunsehat.features.guidance.presentation
+package com.example.daunsehat.features.guidance.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,8 +10,6 @@ import com.example.daunsehat.data.repository.GuidanceRepository
 import com.example.daunsehat.data.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 
 class GuidanceViewModel(
     private val userRepository: UserRepository,
@@ -22,8 +20,6 @@ class GuidanceViewModel(
 
     private val _guidanceArticles = MutableStateFlow<List<GuidanceResponse>>(emptyList())
     val guidanceArticles: LiveData<List<GuidanceResponse>> get() = _guidanceArticles.asLiveData()
-
-    private val _isSuccess = MutableStateFlow<Boolean>(false)
 
     private val _isLoading = MutableLiveData<Boolean>()
 

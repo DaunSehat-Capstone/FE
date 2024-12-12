@@ -1,4 +1,4 @@
-package com.example.daunsehat.onboarding
+package com.example.daunsehat.features.onboarding
 
 data class OnboardingItem(
     val imageRes: Int,
