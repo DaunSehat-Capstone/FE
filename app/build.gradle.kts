@@ -95,4 +95,6 @@ dependencies {
 
     // DataStore (Data storage)
     implementation(libs.androidx.datastore)
+
+    implementation(libs.material)
 }
