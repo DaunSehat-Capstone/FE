@@ -10,11 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.daunsehat.R
 import com.example.daunsehat.data.remote.response.ListArticleItem
-import com.example.daunsehat.data.repository.ResultApi
-import com.example.daunsehat.data.repository.UserRepository
 import com.example.daunsehat.databinding.UserArticleItemBinding
 import com.example.daunsehat.features.community.presentation.DetailArticleFragment
-import com.example.daunsehat.features.profile.presentation.viewmodel.ProfileViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -105,6 +102,7 @@ class ListUserArticleAdapter (
             }
         }
 
+        @SuppressLint("InflateParams")
         private fun showDeleteMenu(
             anchor: View,
             articleId: String,

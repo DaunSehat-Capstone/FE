@@ -2,7 +2,6 @@ package com.example.daunsehat.features.community.presentation
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import com.example.daunsehat.features.authentication.login.presentation.LoginAct
 import com.example.daunsehat.features.community.presentation.viewmodel.DetailArticleViewModel
 import com.example.daunsehat.utils.NetworkUtils
 import com.example.daunsehat.utils.ViewModelFactory
-import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Locale
 

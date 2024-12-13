@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.daunsehat.data.repository.UserRepository
 import com.example.daunsehat.di.Injection
 import com.example.daunsehat.features.authentication.login.presentation.viewmodel.LoginViewModel
+import com.example.daunsehat.features.authentication.register.presentation.viewmodel.RegisterViewModel
 import com.example.daunsehat.features.community.presentation.viewmodel.AddArticleViewModel
 import com.example.daunsehat.features.community.presentation.viewmodel.CommunityViewModel
 import com.example.daunsehat.features.community.presentation.viewmodel.DetailArticleViewModel
-import com.example.daunsehat.features.authentication.register.presentation.viewmodel.RegisterViewModel
 import com.example.daunsehat.features.detection.presentation.viewmodel.PredictViewModel
 import com.example.daunsehat.features.history.presentation.viewmodel.HistoryViewModel
 import com.example.daunsehat.features.main.viewmodel.MainViewModel

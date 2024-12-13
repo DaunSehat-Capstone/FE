@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,12 +14,11 @@ import com.bumptech.glide.Glide
 import com.example.daunsehat.R
 import com.example.daunsehat.data.remote.response.Prediction
 import com.example.daunsehat.data.repository.ResultApi
-import com.example.daunsehat.features.main.MainActivity
 import com.example.daunsehat.databinding.FragmentPredictResultBinding
 import com.example.daunsehat.features.authentication.login.presentation.LoginActivity
 import com.example.daunsehat.features.detection.presentation.viewmodel.PredictViewModel
-import com.example.daunsehat.features.history.presentation.HistoryFragment
 import com.example.daunsehat.features.homepage.presentation.HomePageFragment
+import com.example.daunsehat.features.main.MainActivity
 import com.example.daunsehat.utils.NetworkUtils
 import com.example.daunsehat.utils.ViewModelFactory
 import com.example.daunsehat.utils.uriToFile

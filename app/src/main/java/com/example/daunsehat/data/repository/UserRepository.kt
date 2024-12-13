@@ -13,8 +13,8 @@ import com.example.daunsehat.data.remote.response.ListArticleItem
 import com.example.daunsehat.data.remote.response.LoginResponse
 import com.example.daunsehat.data.remote.response.PredictResponse
 import com.example.daunsehat.data.remote.response.ProfileResponse
-import com.example.daunsehat.data.remote.response.UserArticleResponse
 import com.example.daunsehat.data.remote.response.RegisterResponse
+import com.example.daunsehat.data.remote.response.UserArticleResponse
 import com.example.daunsehat.data.remote.retrofit.ApiService
 import com.example.daunsehat.data.remote.retrofit.EditProfileRequest
 import com.example.daunsehat.data.remote.retrofit.LoginRequest

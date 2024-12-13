@@ -8,12 +8,12 @@ import com.example.daunsehat.data.remote.response.ListArticleItem
 import com.example.daunsehat.data.remote.response.LoginResponse
 import com.example.daunsehat.data.remote.response.PredictResponse
 import com.example.daunsehat.data.remote.response.ProfileResponse
+import com.example.daunsehat.data.remote.response.RegisterResponse
 import com.example.daunsehat.data.remote.response.UserArticleResponse
+import com.google.gson.annotations.SerializedName
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
-import com.example.daunsehat.data.remote.response.RegisterResponse
-import com.google.gson.annotations.SerializedName
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
