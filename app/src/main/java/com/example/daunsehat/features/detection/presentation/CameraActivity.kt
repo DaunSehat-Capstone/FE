@@ -4,8 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.view.WindowInsets
-import android.view.WindowManager
+import android.view.Surface
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -16,7 +15,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.daunsehat.databinding.ActivityCameraBinding
-import com.example.daunsehat.features.main.MainActivity
 import com.example.daunsehat.utils.createFile
 
 class CameraActivity : AppCompatActivity() {
@@ -48,14 +46,6 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        hideSystemUI()
-        binding.viewFinder.post {
-            startCamera()
-        }
-    }
-
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
         val photoFile = createFile(application)
@@ -66,10 +56,11 @@ class CameraActivity : AppCompatActivity() {
             ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    val intent = Intent()
-                    intent.putExtra("picture", photoFile)
-                    intent.putExtra("isBackCamera", cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
-                    setResult(MainActivity.CAMERA_X_RESULT, intent)
+                    val intent = Intent().apply {
+                        putExtra("picture", photoFile)
+                        putExtra("isBackCamera", cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
+                    }
+                    setResult(RESULT_OK, intent)
                     finish()
                 }
 
@@ -80,14 +71,11 @@ class CameraActivity : AppCompatActivity() {
         )
     }
 
-
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-
-            val rotation = binding.viewFinder.display?.rotation ?: 0
 
             val preview = Preview.Builder()
                 .build()
@@ -96,7 +84,7 @@ class CameraActivity : AppCompatActivity() {
                 }
 
             imageCapture = ImageCapture.Builder()
-                .setTargetRotation(rotation)
+                .setTargetRotation(binding.viewFinder.display?.rotation ?: Surface.ROTATION_0)
                 .build()
 
             try {
@@ -113,25 +101,6 @@ class CameraActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
-
-    private fun hideSystemUI() {
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
-        supportActionBar?.hide()
-    }
-
-    private val requiredPermissions = arrayOf(
-        android.Manifest.permission.CAMERA,
-        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )
-
     private fun allPermissionsGranted() = requiredPermissions.all {
         ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
     }
@@ -140,14 +109,24 @@ class CameraActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, requiredPermissions, PERMISSION_REQUEST_CODE)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (!allPermissionsGranted()) {
-            Toast.makeText(this, "Permission not granted. Exiting...", Toast.LENGTH_SHORT).show()
-            finish()
-        } else {
-            startCamera()
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (allPermissionsGranted()) {
+                startCamera()
+            } else {
+                Toast.makeText(this, "Permissions not granted.", Toast.LENGTH_SHORT).show()
+                finish()
+            }
         }
+    }
+
+    private val requiredPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.READ_MEDIA_IMAGES)
+    } else {
+        arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
     companion object {
