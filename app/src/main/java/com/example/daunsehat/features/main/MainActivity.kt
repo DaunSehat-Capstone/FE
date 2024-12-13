@@ -37,17 +37,6 @@ class MainActivity : AppCompatActivity() {
 
         createNotificationChannel()
 
-        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        val isOnboardingCompleted = sharedPreferences.getBoolean("onboarding_completed", false)
-
-        Log.d("MainActivity", "Is onboarding completed? $isOnboardingCompleted")
-
-        if (!isOnboardingCompleted) {
-            startActivity(Intent(this, OnboardingActivity::class.java))
-            finish()
-            return
-        }
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -59,11 +48,24 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             } else {
-                if (!NetworkUtils.isInternetAvailable(this)) {
-                    Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
+                val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
+                val isOnboardingCompleted = sharedPreferences.getBoolean("onboarding_completed", false)
+
+                Log.d("MainActivity", "Is onboarding completed? $isOnboardingCompleted")
+
+                if (!isOnboardingCompleted) {
+                    val onboardingIntent = Intent(this, OnboardingActivity::class.java)
+                    startActivity(onboardingIntent)
+                    finish()
+                } else {
+                    if (!NetworkUtils.isInternetAvailable(this)) {
+                        Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
+
+
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
