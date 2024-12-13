@@ -76,13 +76,6 @@ interface ApiService {
         @Part file: MultipartBody.Part?
     ): ProfileResponse
 
-    @Multipart
-    @POST("/predict")
-    suspend fun predictPlant(
-        @Header("Authorization") token: String,
-        @Part file: MultipartBody.Part
-    ): PredictResponse
-
     @GET("uarticle")
     suspend fun getAllArticle(
         @Header("Authorization") token: String
@@ -119,6 +112,13 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("id") articleId: String
     ): Response<UserArticleResponse>
+
+    @Multipart
+    @POST("/predict")
+    suspend fun predictPlant(
+        @Header("Authorization") token: String,
+        @Part file: MultipartBody.Part
+    ): PredictResponse
 
     @GET("/predict")
     suspend fun getHistoryPredict(
