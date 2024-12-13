@@ -1,22 +1,20 @@
 package com.example.daunsehat.features.authentication.login.presentation
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.daunsehat.features.main.MainActivity
 import com.example.daunsehat.data.pref.UserModel
 import com.example.daunsehat.data.repository.ResultApi
 import com.example.daunsehat.databinding.ActivityLoginBinding
 import com.example.daunsehat.features.authentication.login.presentation.viewmodel.LoginViewModel
 import com.example.daunsehat.features.authentication.register.presentation.RegisterActivity
+import com.example.daunsehat.features.main.MainActivity
 import com.example.daunsehat.utils.ViewModelFactory
 
 class LoginActivity : AppCompatActivity() {

@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.example.daunsehat.features.main.MainActivity
 import com.example.daunsehat.R
+import com.example.daunsehat.features.main.MainActivity
 import com.google.android.material.button.MaterialButton
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator
 

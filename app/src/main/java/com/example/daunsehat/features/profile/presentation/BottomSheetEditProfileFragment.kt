@@ -1,20 +1,12 @@
 package com.example.daunsehat.features.profile.presentation
 
-import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
-import com.bumptech.glide.Glide
-import com.example.daunsehat.R
 import com.example.daunsehat.data.repository.ResultApi
 import com.example.daunsehat.databinding.BottomSheetEditProfileBinding
 import com.example.daunsehat.features.authentication.login.presentation.LoginActivity
@@ -24,9 +16,6 @@ import com.example.daunsehat.utils.ViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.snackbar.Snackbar
-import com.yalantis.ucrop.UCrop
-import java.io.File
 
 class BottomSheetEditProfileFragment : BottomSheetDialogFragment() {
     private var _binding: BottomSheetEditProfileBinding? = null

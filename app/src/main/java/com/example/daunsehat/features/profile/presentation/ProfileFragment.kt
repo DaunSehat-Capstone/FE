@@ -1,8 +1,8 @@
 package com.example.daunsehat.features.profile.presentation
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +24,6 @@ import com.example.daunsehat.features.profile.presentation.viewmodel.ProfileView
 import com.example.daunsehat.utils.ImageLoader
 import com.example.daunsehat.utils.NetworkUtils
 import com.example.daunsehat.utils.ViewModelFactory
-import com.google.android.material.snackbar.Snackbar
 
 class ProfileFragment : Fragment(), ListUserArticleAdapter.OnDeleteArticleListener {
     private var _binding: FragmentProfileBinding? = null
@@ -182,6 +181,7 @@ class ProfileFragment : Fragment(), ListUserArticleAdapter.OnDeleteArticleListen
         binding.rvUserArticles.visibility = if (show) View.GONE else View.VISIBLE
     }
 
+    @SuppressLint("InflateParams")
     private fun showLogoutMenu(anchor: View) {
         val popupView = LayoutInflater.from(requireContext()).inflate(R.layout.menu_item_logout, null)
 
