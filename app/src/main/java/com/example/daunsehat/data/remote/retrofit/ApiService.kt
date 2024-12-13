@@ -1,20 +1,19 @@
 package com.example.daunsehat.data.remote.retrofit
 
-import android.gesture.Prediction
 import com.example.daunsehat.data.remote.response.AddArticleResponse
 import com.example.daunsehat.data.remote.response.DetailArticleResponse
-import com.example.daunsehat.data.remote.response.HistoryPredictResponse
+import com.example.daunsehat.data.remote.response.GuidanceResponse
 import com.example.daunsehat.data.remote.response.HistoryPredictResponseItem
 import com.example.daunsehat.data.remote.response.ListArticleItem
 import com.example.daunsehat.data.remote.response.LoginResponse
 import com.example.daunsehat.data.remote.response.PredictResponse
 import com.example.daunsehat.data.remote.response.ProfileResponse
+import com.example.daunsehat.data.remote.response.RegisterResponse
 import com.example.daunsehat.data.remote.response.UserArticleResponse
+import com.google.gson.annotations.SerializedName
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
-import com.example.daunsehat.data.remote.response.RegisterResponse
-import com.google.gson.annotations.SerializedName
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
