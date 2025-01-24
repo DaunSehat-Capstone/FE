@@ -4,7 +4,7 @@
     package="com.example.daunsehat">
 
     <uses-feature
-        android:name="android.hardware.camera.any"
+        android:name="android.hardware.camera"
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />

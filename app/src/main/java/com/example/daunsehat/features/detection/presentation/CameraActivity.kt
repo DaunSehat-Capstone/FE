@@ -15,6 +15,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.daunsehat.databinding.ActivityCameraBinding
+import com.example.daunsehat.features.main.MainActivity
 import com.example.daunsehat.utils.createFile
 
 class CameraActivity : AppCompatActivity() {
@@ -56,11 +57,10 @@ class CameraActivity : AppCompatActivity() {
             ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    val intent = Intent().apply {
-                        putExtra("picture", photoFile)
-                        putExtra("isBackCamera", cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
-                    }
-                    setResult(RESULT_OK, intent)
+                    val intent = Intent()
+                    intent.putExtra("picture", photoFile)
+                    intent.putExtra("isBackCamera", cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
+                    setResult(MainActivity.CAMERA_X_RESULT, intent)
                     finish()
                 }
 
